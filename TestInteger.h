@@ -185,13 +185,21 @@ struct TestInteger : CppUnit::TestFixture {
         const int b[] = {2};
               int x[10];
         const int* p = My::shift_right_digits(a, a + 3, 2, x);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
+	
+		memset(x, 0, 10);
+		const int b1[] = {0};
+		const int* p1 = My::shift_right_digits(a, a + 3, 3, x);
+		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p1, b1));
+	}
 
     // -----
     // suite
     // -----
 
     CPPUNIT_TEST_SUITE(TestInteger);
+    CPPUNIT_TEST(test_shift_left_digits);
+    CPPUNIT_TEST(test_shift_right_digits);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
@@ -203,8 +211,6 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_output);
     CPPUNIT_TEST(test_plus_digits);
     CPPUNIT_TEST(test_pow);
-    CPPUNIT_TEST(test_shift_left_digits);
-    CPPUNIT_TEST(test_shift_right_digits);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
