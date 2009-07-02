@@ -34,7 +34,10 @@ namespace My {
  */
 template <typename II1, typename II2, typename OI>
 OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    // <your code>
+    while(b1!=e1 && b2!=e2){
+    	*x = *b1 + *b2; // assigning x
+    	++b1; ++b2; ++x;
+    }
     return x;}
 
 // ------------
@@ -54,7 +57,10 @@ OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    // <your code>
+    while(b1!=e1 && b2!=e2){
+    	*x = *b1 - *b2; // assigning x
+    	++b1; ++b2; ++x;
+    }
     return x;}
 
 // -----------------
@@ -74,7 +80,10 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    // <your code>
+     while(b1!=e1 && b2!=e2){
+    	*x = *b1 * *b2; // assigning x
+    	++b1; ++b2; ++x;
+    }
     return x;}
 
 // --------------
@@ -94,7 +103,10 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    // <your code>
+     while(b1!=e1 && b2!=e2){
+    	*x = *b1 / *b2; // assigning x
+    	++b1; ++b2; ++x;
+    }
     return x;}
 
 // -----------------
@@ -112,7 +124,10 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II, typename OI>
 OI shift_left_digits (II b, II e, int n, OI x) {
-    // <your code>
+    while(b!=e){
+    	*x = *b << n;
+    	++b; ++x;
+    }
     return x;}
 
 // ------------------
@@ -130,7 +145,10 @@ OI shift_left_digits (II b, II e, int n, OI x) {
  */
 template <typename II, typename OI>
 OI shift_right_digits (II b, II e, int n, OI x) {
-    // <your code>
+   while(b!=e){
+    	*x = *b >> n;
+    	++b; ++x;
+    }
     return x;}
 
 // -------
