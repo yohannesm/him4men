@@ -330,8 +330,9 @@ class Integer {
         // data
         // ----
         size_t digits; // number of digits
-	bool sign = true; // true = positive & false = negative 
-        C<T> container;
+		// Does not compile - please re-add when it compiles
+		//bool sign = true; // true = positive & false = negative 
+        //C<T> container;
 
         // -----
         // valid
