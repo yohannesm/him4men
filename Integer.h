@@ -304,11 +304,12 @@ class Integer {
             return lhs << "0";}
 
     private:
-        // ----
+        // ----template < typename T, typename C = std::vector<T> >
         // data
         // ----
-
-        // <your data>
+        size_t digits; // number of digits
+	bool sign = true; // true = positive & false = negative 
+        C<T> container;
 
         // -----
         // valid
