@@ -184,13 +184,17 @@ struct TestInteger : CppUnit::TestFixture {
         const int a[] = {2, 3, 4};
         const int b[] = {2};
               int x[10];
-        const int* p = My::shift_right_digits(a, a + 3, 2, x);
+        const int *p = My::shift_right_digits(a, a + 3, 2, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
 	
 		memset(x, 0, 10);
 		const int b1[] = {0};
-		const int* p1 = My::shift_right_digits(a, a + 3, 3, x);
+		const int *p1 = My::shift_right_digits(a, a + 3, 3, x);
 		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p1, b1));
+
+		memset(x, 0, 10);
+		const int *p2 = My::shift_right_digits(a, a + 3, 0, x);
+		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p2, a));
 	}
 
     // -----
