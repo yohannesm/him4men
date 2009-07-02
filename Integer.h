@@ -151,11 +151,27 @@ OI shift_left_digits (II b, II e, int n, OI x) {
  */
 template <typename II, typename OI>
 OI shift_right_digits (II b, II e, int n, OI x) {
-   while(b!=e){
-    	*x = *b >> n;
-    	++b; ++x;
-    }
-    return x;}
+	int shift_count;
+	II shifted;
+
+	shifted = b;
+	shift_count = 0;
+	// First, allow the original iterator to proceed along, not copying anything
+	// to the destination until we get n elements into the container
+	while(b != e && shift_count < n) {
+		++b;
+		++shift_count;
+	}
+
+	// Then, start copying elements into x, starting at the beginning of where
+	// b started.  Continue until we run out of input in e.
+	while (b != e) {
+		*x = *shifted;
+		++shifted; ++x; ++b;
+	}
+
+    return x;
+}
 
 // -------
 // Integer
