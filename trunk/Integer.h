@@ -165,9 +165,15 @@ OI shift_right_digits (II b, II e, int n, OI x) {
 
 	// Then, start copying elements into x, starting at the beginning of where
 	// b started.  Continue until we run out of input in e.
-	while (b != e) {
-		*x = *shifted;
-		++shifted; ++x; ++b;
+	// If we are already at the end, we have shifted off the end of the input,
+	// so just output 0.
+	if (b == e) {
+		*x = 0;
+	} else {
+		do {
+			*x = *shifted;
+			++shifted; ++x; ++b;
+		} while (b != e);
 	}
 
     return x;
