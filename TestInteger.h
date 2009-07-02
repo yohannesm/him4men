@@ -172,9 +172,15 @@ struct TestInteger : CppUnit::TestFixture {
     void test_shift_left_digits () {
         const int a[] = {2, 3, 4};
         const int b[] = {2, 3, 4, 0, 0};
-              int x[10];
+        int x[10];
         const int* p = My::shift_left_digits(a, a + 3, 2, x);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
+
+		memset(x, 0, 10);
+        const int* p1 = My::shift_left_digits(a, a + 3, 0, x);
+        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p1, a));
+	}
+		
 
     // -----------------------
     // test_shift_right_digits

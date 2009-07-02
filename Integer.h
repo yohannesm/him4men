@@ -34,11 +34,13 @@ namespace My {
  */
 template <typename II1, typename II2, typename OI>
 OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
+	// First, we need to detect the relative lengths of the inputs
     while(b1!=e1 && b2!=e2){
     	*x = *b1 + *b2; // assigning x
     	++b1; ++b2; ++x;
     }
-    return x;}
+    return x;
+}
 
 // ------------
 // minus_digits
