@@ -124,11 +124,17 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II, typename OI>
 OI shift_left_digits (II b, II e, int n, OI x) {
-    while(b!=e){
-    	*x = *b << n;
+    while (b != e) {
+    	*x = *b;
     	++b; ++x;
     }
-    return x;}
+	// Stream in the least significant zeroes produced by the shift
+	for (int i = 0; i < n; i++) {
+		*x = 0;
+	}
+
+    return x;
+}
 
 // ------------------
 // shift_right_digits
