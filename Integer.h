@@ -412,24 +412,32 @@ class Integer {
          */
         friend std::ostream& operator << (std::ostream& lhs, const Integer& rhs) {
             // <your code>
-            return lhs << "0";}
+            return lhs << "0";
+		}
 
     private:
         // ----template < typename T, typename C = std::vector<T> >
         // data
         // ----
         size_t digits; // number of digits
-		// Does not compile - please re-add when it compiles
-		//bool sign = true; // true = positive & false = negative 
-        //C<T> container;
+		bool sign; // true = positive & false = negative 
+        C container;
 
         // -----
         // valid
         // -----
 
         bool valid () const {
-            // <your code>
-            return true;}
+			C::iterator it;
+			// All numbers are 0-9
+			// Leading numbers non-zero
+            it = container.begin();
+			while (it != container.end()) {
+				if (*it < 0 || *it > 9) return false;
+			}
+
+            return true;
+		}
 
     public:
         // ------------
@@ -440,8 +448,39 @@ class Integer {
          * <your documentation>
          */
         Integer (int value) {
-            // <your code>
-            assert(valid());}
+			C::iterator it, rev;
+			T tmp;
+
+			// Determine sign, and get absolute value
+			if (value < 0) {
+				value = -value;
+				sign = false;
+			} else {
+				sign = true;
+			}
+
+			// Count digits, and put one digit per node; reversed, though
+			digits = 0;
+			it = container.begin();
+			while (value > 10) {
+				*it = value % 10;
+				value = value / 10;
+				++it; ++digits;
+			}
+			*it = num;
+
+			// write it forward
+			it = container.begin();
+			rev = container.reverse();
+			for (int i = 0; i < (digits / 2); i++) {
+				tmp = *it;
+				*it = *rev;
+				*rev = tmp;
+				++it; ++rev;	
+			}
+
+            assert(valid());
+		}
 
         /**
          * <your documentation>
