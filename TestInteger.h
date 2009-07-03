@@ -157,6 +157,7 @@ struct TestInteger : CppUnit::TestFixture {
         const char* p1 = My::plus_digits(a1, a1 + 3, b1, b1 + 3, x1);
         CPPUNIT_ASSERT(p1 - x1 == 3);
         CPPUNIT_ASSERT(std::equal(const_cast<const char*>(x1), p1, c1));
+
 	}
 
     // --------
