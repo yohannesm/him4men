@@ -148,7 +148,16 @@ struct TestInteger : CppUnit::TestFixture {
               int x[10];
         const int* p = My::plus_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));
+
+        const char a1[] = {2, 3, 4};
+        const char b1[] = {5, 6, 7};
+        const char c1[] = {8, 0, 1};
+              char x1[10];
+        const char* p1 = My::plus_digits(a1, a1 + 3, b1, b1 + 3, x1);
+        CPPUNIT_ASSERT(p1 - x1 == 3);
+        CPPUNIT_ASSERT(std::equal(const_cast<const char*>(x1), p1, c1));
+	}
 
     // --------
     // test_pow
@@ -176,7 +185,7 @@ struct TestInteger : CppUnit::TestFixture {
         const int* p = My::shift_left_digits(a, a + 3, 2, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
 
-		memset(x, 0, 10);
+		memset(x, 0, 10 * sizeof(int));
         const int* p1 = My::shift_left_digits(a, a + 3, 0, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p1, a));
 	}
@@ -193,14 +202,19 @@ struct TestInteger : CppUnit::TestFixture {
         const int *p = My::shift_right_digits(a, a + 3, 2, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
 	
-		memset(x, 0, 10);
+		memset(x, 0, 10 * sizeof(int));
 		const int b1[] = {0};
 		const int *p1 = My::shift_right_digits(a, a + 3, 3, x);
 		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p1, b1));
 
-		memset(x, 0, 10);
-		const int *p2 = My::shift_right_digits(a, a + 3, 0, x);
-		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p2, a));
+		memset(x, 0, 10 * sizeof(int));
+		const int b2[] = {0};
+		const int *p2 = My::shift_right_digits(a, a + 3, 30, x);
+		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p2, b2));
+
+		memset(x, 0, 10 * sizeof(int));
+		const int *p3 = My::shift_right_digits(a, a + 3, 0, x);
+		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p3, a));
 	}
 
     // -----
@@ -210,6 +224,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestInteger);
     CPPUNIT_TEST(test_shift_left_digits);
     CPPUNIT_TEST(test_shift_right_digits);
+    CPPUNIT_TEST(test_plus_digits);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
@@ -219,7 +234,6 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_multiplies_digits);
     CPPUNIT_TEST(test_negation);
     CPPUNIT_TEST(test_output);
-    CPPUNIT_TEST(test_plus_digits);
     CPPUNIT_TEST(test_pow);
     CPPUNIT_TEST_SUITE_END();};
 

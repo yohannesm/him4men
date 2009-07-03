@@ -30,17 +30,82 @@ namespace My {
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the sum of the two input sequences into the output sequence
+ * Algorithm:  First, pass through both input sequences, and compute their
+ * relative lengths
  * (s1 + s2) => x
  */
 template <typename II1, typename II2, typename OI>
 OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-	// First, we need to detect the relative lengths of the inputs
-    while(b1!=e1 && b2!=e2){
-    	*x = *b1 + *b2; // assigning x
-    	++b1; ++b2; ++x;
+	int num_digits;
+    OI backwards;
+
+	backwards = x;
+    unsigned int carry = 0;
+    while((e1 != b1) && (e2 != b2)) {
+	 	// add the next column of digits; include carry
+        *backwards = *e1 + *e2 + carry;
+		num_digits++;
+        if (*backwards >= 10) {         // if result >= 10, perform carry
+            *backwards = *backwards - 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        --e1; --e2; ++backwards;
     }
+	// Handle unequal sized inputs, if first input longer
+	while (e1 != b1) {
+		*backwards = *e1 + carry;
+		num_digits++;
+        if (*backwards >= 10) {         // if result >= 10, perform carry
+            *backwards = *backwards - 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        --e1; ++backwards;
+	}
+
+	// Handle unequal sized inputs, if second input longer
+	while (e2 != b2) {
+		*backwards = *e2 + carry;
+		num_digits++;
+        if (*backwards >= 10) {         // if result >= 10, perform carry
+            *backwards = *backwards - 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        --e2; ++backwards;
+	}
+
+	// Handle the case where there was a carry out of the most significant digit
+    if (carry != 0) {
+        *backwards = carry;
+		num_digits++;
+        carry = 0;
+		++backwards;
+    }
+
+	//int tmp;
+	// reverse backwards, and write into x
+	for (int i = 0; i < (num_digits / 2); i++) {
+		--backwards;
+#if 0
+		tmp = *backwards;
+		*x = *backwards;
+		*backwards = tmp;
+#endif
+		*x ^= *backwards;
+		*backwards ^= *x;
+		*x ^= *backwards;
+		++x;
+	}
+
     return x;
 }
+
+
 
 // ------------
 // minus_digits
@@ -171,6 +236,7 @@ OI shift_right_digits (II b, II e, int n, OI x) {
 	// so just output 0.
 	if (b == e) {
 		*x = 0;
+		++x;
 	} else {
 		do {
 			*x = *shifted;
