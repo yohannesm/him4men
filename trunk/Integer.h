@@ -21,6 +21,34 @@ namespace My {
 // plus_digits
 // -----------
 
+template <typename II1, typename II2, typename OI>
+int add_column (II1 a, II2 b, OI x, int carry) {
+	*x = *a + *b + carry;
+	if (*x >= 10) {
+		*x -= 10;
+		carry = 1;
+	} else {
+		carry = 0;
+	}
+
+	return carry;
+}
+
+
+template <typename II, typename OI>
+int add_digit (II a, OI x, int carry) {
+	*x = *a + carry;
+	if (*x >= 10) {
+		*x -= 10;
+		carry = 1;
+	} else {
+		carry = 0;
+	}
+
+	return carry;
+}
+
+
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
@@ -36,60 +64,47 @@ namespace My {
  */
 template <typename II1, typename II2, typename OI>
 OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-	int num_digits;
-    OI backwards;
+    OI backwards, end;
+	int num_digits = 0;
 
 	backwards = x;
-    unsigned int carry = 0;
+    int carry = 0;
     while((e1 != b1) && (e2 != b2)) {
+		--e1; --e2;
 	 	// add the next column of digits; include carry
-        *backwards = *e1 + *e2 + carry;
-		num_digits++;
-        if (*backwards >= 10) {         // if result >= 10, perform carry
-            *backwards = *backwards - 10;
-            carry = 1;
-        } else {
-            carry = 0;
-        }
-        --e1; --e2; ++backwards;
+		carry = add_column(e1, e2, backwards, carry);
+		++num_digits;
+        ++backwards;
     }
 	// Handle unequal sized inputs, if first input longer
 	while (e1 != b1) {
-		*backwards = *e1 + carry;
-		num_digits++;
-        if (*backwards >= 10) {         // if result >= 10, perform carry
-            *backwards = *backwards - 10;
-            carry = 1;
-        } else {
-            carry = 0;
-        }
-        --e1; ++backwards;
+		--e1;
+		carry = add_digit(e1, backwards, carry);
+		++num_digits;
+        ++backwards;
 	}
 
 	// Handle unequal sized inputs, if second input longer
 	while (e2 != b2) {
-		*backwards = *e2 + carry;
-		num_digits++;
-        if (*backwards >= 10) {         // if result >= 10, perform carry
-            *backwards = *backwards - 10;
-            carry = 1;
-        } else {
-            carry = 0;
-        }
-        --e2; ++backwards;
+		--e2;
+		carry = add_digit(e2, backwards, carry);
+		++num_digits;
+        ++backwards;
 	}
 
 	// Handle the case where there was a carry out of the most significant digit
     if (carry != 0) {
         *backwards = carry;
-		num_digits++;
+		++num_digits;
         carry = 0;
 		++backwards;
     }
 
+	end = backwards;
 	//int tmp;
+	int i;
 	// reverse backwards, and write into x
-	for (int i = 0; i < (num_digits / 2); i++) {
+	for (i = 0; i < (num_digits / 2); i++) {
 		--backwards;
 #if 0
 		tmp = *backwards;
@@ -102,7 +117,7 @@ OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 		++x;
 	}
 
-    return x;
+    return end;
 }
 
 
