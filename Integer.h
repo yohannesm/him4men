@@ -428,7 +428,7 @@ class Integer {
         // -----
 
         bool valid () const {
-			C::iterator it;
+			typename C::iterator it;
 			// All numbers are 0-9
 			// Leading numbers non-zero
             it = container.begin();
@@ -448,7 +448,7 @@ class Integer {
          * <your documentation>
          */
         Integer (int value) {
-			C::iterator it, rev;
+			typename C::iterator it, rev;
 			T tmp;
 
 			// Determine sign, and get absolute value
@@ -467,16 +467,17 @@ class Integer {
 				value = value / 10;
 				++it; ++digits;
 			}
-			*it = num;
+			*it = value;
 
 			// write it forward
 			it = container.begin();
-			rev = container.reverse();
-			for (int i = 0; i < (digits / 2); i++) {
+			rev = container.end();
+			for (unsigned int i = 0; i < (digits / 2); i++) {
+				--rev;
 				tmp = *it;
 				*it = *rev;
 				*rev = tmp;
-				++it; ++rev;	
+				++it;	
 			}
 
             assert(valid());
