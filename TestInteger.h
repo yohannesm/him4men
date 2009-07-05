@@ -141,23 +141,31 @@ struct TestInteger : CppUnit::TestFixture {
     // test_plus_digits
     // ----------------
 
+	template <typename T>
     void test_plus_digits () {
-        const int a[] = {2, 3, 4};
-        const int b[] = {5, 6, 7};
-        const int c[] = {8, 0, 1};
-              int x[10];
-        const int* p = My::plus_digits(a, a + 3, b, b + 3, x);
+        const T a[] = {2, 3, 4};
+        const T b[] = {5, 6, 7};
+        const T c[] = {8, 0, 1};
+              T x[10];
+        const T* p = My::plus_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));
 
-        const char a1[] = {2, 3, 4};
-        const char b1[] = {5, 6, 7};
-        const char c1[] = {8, 0, 1};
-              char x1[10];
-        const char* p1 = My::plus_digits(a1, a1 + 3, b1, b1 + 3, x1);
+        const T a1[] = {2, 3, 4};
+        const T b1[] = {9};
+        const T c1[] = {2, 4, 3};
+              T x1[10];
+        const T* p1 = My::plus_digits(a1, a1 + 3, b1, b1 + 1, x1);
         CPPUNIT_ASSERT(p1 - x1 == 3);
-        CPPUNIT_ASSERT(std::equal(const_cast<const char*>(x1), p1, c1));
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x1), p1, c1));
 
+        const T a2[] = {9, 9, 9};
+        const T b2[] = {1};
+        const T c2[] = {1, 0, 0, 0};
+              T x2[10];
+        const T* p2 = My::plus_digits(a2, a2 + 3, b2, b2 + 1, x2);
+        CPPUNIT_ASSERT(p2 - x2 == 4);
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x2), p2, c2));
 	}
 
     // --------
@@ -225,7 +233,8 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestInteger);
     CPPUNIT_TEST(test_shift_left_digits);
     CPPUNIT_TEST(test_shift_right_digits);
-    CPPUNIT_TEST(test_plus_digits);
+    CPPUNIT_TEST(test_plus_digits<int>);
+    CPPUNIT_TEST(test_plus_digits<char>);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
