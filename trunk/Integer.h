@@ -21,33 +21,54 @@ namespace My {
 // plus_digits
 // -----------
 
+// Given two sets of iterators, add the next right-most column with the carry,
+// put the result in the output iterator, and return the carry.
+// @param Iterator to beginning (left-most digit) of input 1
+// @param Iterator to one past the end (current right-most digit) of input 1
+// @param Iterator to beginning (left-most digit) of input 2
+// @param Iterator to one past the end (current right-most digit) of input 2
+// @param Iterator to the output
+// @post e1 and e2 are moved one digit to the left, if they had any digits
+// remaining.
+// @post x is moved one digit to the right.
+// @return The new carry value for this column.
 template <typename II1, typename II2, typename OI>
-int add_column (II1 a, II2 b, OI x, int carry) {
-	*x = *a + *b + carry;
-	if (*x >= 10) {
-		*x -= 10;
-		carry = 1;
-	} else {
-		carry = 0;
+int add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int carry)
+{
+	int result = carry;
+
+	if (e1 != b1) {
+		--e1;
+		result += *e1;
 	}
+
+	if (e2 != b2) {
+		--e2;
+		result += *e2;
+	}
+
+	carry = 0;
+	while (result >= 10) {
+		result -= 10;
+		carry += 1;
+	}
+	*x = result;
+	++x;
 
 	return carry;
 }
 
 
-template <typename II, typename OI>
-int add_digit (II a, OI x, int carry) {
-	*x = *a + carry;
-	if (*x >= 10) {
-		*x -= 10;
-		carry = 1;
-	} else {
-		carry = 0;
+template <typename BI>
+void reverse_digits (BI b, BI e, int length) {
+	for (int i = 0; i < (length / 2); i++) {
+		--e;
+		*b ^= *e;
+		*e ^= *b;
+		*b ^= *e;
+		++b;
 	}
-
-	return carry;
 }
-
 
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
@@ -62,62 +83,23 @@ int add_digit (II a, OI x, int carry) {
  * relative lengths
  * (s1 + s2) => x
  */
-template <typename II1, typename II2, typename OI>
-OI plus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    OI backwards, end;
+template <typename IBI1, typename IBI2, typename OBI>
+OBI plus_digits (IBI1 b1, IBI1 e1, IBI2 b2, IBI2 e2, OBI x) {
+    OBI backwards, end;
 	int num_digits = 0;
 
 	backwards = x;
     int carry = 0;
-    while((e1 != b1) && (e2 != b2)) {
-		--e1; --e2;
+    while((e1 != b1) || (e2 != b2) || (carry != 0)) {
 	 	// add the next column of digits; include carry
-		carry = add_column(e1, e2, backwards, carry);
+		carry = add_next_column(b1, e1, b2, e2, backwards, carry);
 		++num_digits;
-        ++backwards;
-    }
-	// Handle unequal sized inputs, if first input longer
-	while (e1 != b1) {
-		--e1;
-		carry = add_digit(e1, backwards, carry);
-		++num_digits;
-        ++backwards;
-	}
-
-	// Handle unequal sized inputs, if second input longer
-	while (e2 != b2) {
-		--e2;
-		carry = add_digit(e2, backwards, carry);
-		++num_digits;
-        ++backwards;
-	}
-
-	// Handle the case where there was a carry out of the most significant digit
-    if (carry != 0) {
-        *backwards = carry;
-		++num_digits;
-        carry = 0;
-		++backwards;
     }
 
 	end = backwards;
-	//int tmp;
-	int i;
-	// reverse backwards, and write into x
-	for (i = 0; i < (num_digits / 2); i++) {
-		--backwards;
-#if 0
-		tmp = *backwards;
-		*x = *backwards;
-		*backwards = tmp;
-#endif
-		*x ^= *backwards;
-		*backwards ^= *x;
-		*x ^= *backwards;
-		++x;
-	}
+	reverse_digits(x, backwards, num_digits);
 
-    return end;
+	return end;
 }
 
 
@@ -431,10 +413,10 @@ class Integer {
 			typename C::iterator it;
 			// All numbers are 0-9
 			// Leading numbers non-zero
-            it = container.begin();
-			while (it != container.end()) {
-				if (*it < 0 || *it > 9) return false;
-			}
+            //it = container.begin();
+			//while (it != container.end()) {
+			//	if (*it < 0 || *it > 9) return false;
+			//}
 
             return true;
 		}
@@ -449,7 +431,6 @@ class Integer {
          */
         Integer (int value) {
 			typename C::iterator it, rev;
-			T tmp;
 
 			// Determine sign, and get absolute value
 			if (value < 0) {
@@ -459,28 +440,21 @@ class Integer {
 				sign = true;
 			}
 
+#if 0
 			// Count digits, and put one digit per node; reversed, though
 			digits = 0;
 			it = container.begin();
-			while (value > 10) {
+			while (value > 0) {
 				*it = value % 10;
 				value = value / 10;
 				++it; ++digits;
 			}
-			*it = value;
 
 			// write it forward
-			it = container.begin();
-			rev = container.end();
-			for (unsigned int i = 0; i < (digits / 2); i++) {
-				--rev;
-				tmp = *it;
-				*it = *rev;
-				*rev = tmp;
-				++it;	
-			}
+			reverse_digits(container.begin(), container.end(), digits);
 
             assert(valid());
+#endif
 		}
 
         /**
