@@ -28,47 +28,40 @@ namespace My {
 // @param Iterator to beginning (left-most digit) of input 2
 // @param Iterator to one past the end (current right-most digit) of input 2
 // @param Iterator to the output
-// @post e1 and e2 are moved one digit to the left, if they had any digits
-// remaining.
 // @post x is moved one digit to the right.
 // @return The new carry value for this column.
 template <typename II1, typename II2, typename OI>
 int add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int carry)
 {
+	// FIXME: This needs to be of the correct type
 	int result = carry;
 
-	if (e1 != b1) {
-		--e1;
+	// If there is more of the first input, add it
+	if (b1 != e1) {
 		result += *e1;
+		b1++;
 	}
 
-	if (e2 != b2) {
-		--e2;
+	// If there is more of the second input, add it
+	if (b2 != e2) {
 		result += *e2;
+		b2++;
 	}
 
+	// Compute the new carry
 	carry = 0;
 	while (result >= 10) {
 		result -= 10;
 		carry += 1;
 	}
+
+	// Write the result
 	*x = result;
-	++x;
+	x++;
 
 	return carry;
 }
 
-
-template <typename BI>
-void reverse_digits (BI b, BI e, int length) {
-	for (int i = 0; i < (length / 2); i++) {
-		--e;
-		*b ^= *e;
-		*e ^= *b;
-		*b ^= *e;
-		++b;
-	}
-}
 
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
@@ -79,34 +72,37 @@ void reverse_digits (BI b, BI e, int length) {
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the sum of the two input sequences into the output sequence
- * Algorithm:  First, pass through both input sequences, and compute their
- * relative lengths
+ * @note assumes the beginning of the sequence is the least significant digit,
+ * and that the end of the sequence is one beyond the most sigificant digit.
  * (s1 + s2) => x
  */
-template <typename IBI1, typename IBI2, typename OBI>
-OBI plus_digits (IBI1 b1, IBI1 e1, IBI2 b2, IBI2 e2, OBI x) {
-    OBI backwards, end;
-	int num_digits = 0;
+template <typename II1, typename II2, typename OI>
+OI plus_digits(II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
+	int carry = 0;
 
-	backwards = x;
-    int carry = 0;
-    while((e1 != b1) || (e2 != b2) || (carry != 0)) {
+    while((b1 != e1) || (b2 != e2) || (carry != 0)) {
 	 	// add the next column of digits; include carry
-		carry = add_next_column(b1, e1, b2, e2, backwards, carry);
-		++num_digits;
+		carry = add_next_column(b1, e1, b2, e2, x, carry);
     }
 
-	end = backwards;
-	reverse_digits(x, backwards, num_digits);
-
-	return end;
+	return x;
+	
 }
-
 
 
 // ------------
 // minus_digits
 // ------------
+template <typename II1, typename II2, typename OI>
+int subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int borrow)
+{
+	
+	return 0;
+}
+
+
+
+
 
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
