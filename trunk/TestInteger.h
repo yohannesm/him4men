@@ -90,14 +90,16 @@ struct TestInteger : CppUnit::TestFixture {
     // test_minus_digits
     // -----------------
 
+	template <typename T>
     void test_minus_digits () {
-        const int a[] = {8, 0, 1};
-        const int b[] = {5, 6, 7};
-        const int c[] = {2, 3, 4};
-              int x[10];
-        const int* p = My::minus_digits(a, a + 3, b, b + 3, x);
+        const T a[] = {1, 0, 8};
+        const T b[] = {7, 6, 5};
+        const T c[] = {4, 3, 2};
+              T x[10];
+        const T* p = My::minus_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));
+	}
 
     // ----------------------
     // test_multiplies_digits
@@ -235,12 +237,13 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_shift_right_digits);
     CPPUNIT_TEST(test_plus_digits<int>);
     CPPUNIT_TEST(test_plus_digits<char>);
+    CPPUNIT_TEST(test_minus_digits<int>);
+    CPPUNIT_TEST(test_minus_digits<char>);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
     CPPUNIT_TEST(test_abs);
     CPPUNIT_TEST(test_divides_digits);
-    CPPUNIT_TEST(test_minus_digits);
     CPPUNIT_TEST(test_multiplies_digits);
     CPPUNIT_TEST(test_negation);
     CPPUNIT_TEST(test_output);

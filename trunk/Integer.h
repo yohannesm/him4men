@@ -130,6 +130,7 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 	assert((minuend - subtrahend) < 10);
 	assert((minuend - subtrahend) >= 0);
 	*x = (minuend - subtrahend);
+	++x;
 	
 	return borrow_out;
 }
