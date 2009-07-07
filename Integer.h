@@ -10,6 +10,7 @@
 #include <stdexcept> // invalid_argument
 #include <string>    // string
 #include <vector>    // vector
+#include <iterator>  // iterator_traits
 
 // ----------
 // namespaces
@@ -31,20 +32,23 @@ namespace My {
 // @post x is moved one digit to the right.
 // @return The new carry value for this column.
 template <typename II1, typename II2, typename OI>
-int add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int carry)
+typename std::iterator_traits<OI>::value_type 
+add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, 
+				 typename std::iterator_traits<OI>::value_type carry)
 {
-	// FIXME: This needs to be of the correct type
-	int result = carry;
+	typename std::iterator_traits<OI>::value_type result = carry;
+	
+	result = carry;
 
 	// If there is more of the first input, add it
 	if (b1 != e1) {
-		result += *e1;
+		result += *b1;
 		b1++;
 	}
 
 	// If there is more of the second input, add it
 	if (b2 != e2) {
-		result += *e2;
+		result += *b2;
 		b2++;
 	}
 

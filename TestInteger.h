@@ -143,17 +143,17 @@ struct TestInteger : CppUnit::TestFixture {
 
 	template <typename T>
     void test_plus_digits () {
-        const T a[] = {2, 3, 4};
-        const T b[] = {5, 6, 7};
-        const T c[] = {8, 0, 1};
+        const T a[] = {4, 3, 2};
+        const T b[] = {7, 6, 5};
+        const T c[] = {1, 0, 8};
               T x[10];
-        const T* p = My::plus_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
+		std::cout << "P: " << (int)x[0] << (int)x[1] << (int)x[2] << std::endl;
         CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));
 
-        const T a1[] = {2, 3, 4};
+        const T a1[] = {4, 3, 2};
         const T b1[] = {9};
-        const T c1[] = {2, 4, 3};
+        const T c1[] = {3, 4, 2};
               T x1[10];
         const T* p1 = My::plus_digits(a1, a1 + 3, b1, b1 + 1, x1);
         CPPUNIT_ASSERT(p1 - x1 == 3);
@@ -161,7 +161,7 @@ struct TestInteger : CppUnit::TestFixture {
 
         const T a2[] = {9, 9, 9};
         const T b2[] = {1};
-        const T c2[] = {1, 0, 0, 0};
+        const T c2[] = {0, 0, 0, 1};
               T x2[10];
         const T* p2 = My::plus_digits(a2, a2 + 3, b2, b2 + 1, x2);
         CPPUNIT_ASSERT(p2 - x2 == 4);
