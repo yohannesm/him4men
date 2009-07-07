@@ -443,7 +443,7 @@ class Integer {
         // data
         // ----
         size_t digits; // number of digits
-		bool sign; // true = positive & false = negative 
+	bool sign; // true = positive & false = negative 
         C container;
 
         // -----
@@ -454,12 +454,12 @@ class Integer {
 			typename C::iterator it;
 			// All numbers are 0-9
 			// Leading numbers non-zero
-            //it = container.begin();
-			//while (it != container.end()) {
-			//	if (*it < 0 || *it > 9) return false;
-			//}
-
-            return true;
+            		it = container.begin();
+			while (it != container.end()) {
+				if (*it < 0 || *it > 9) return false;
+				++it;
+			}
+            	return true;
 		}
 
     public:
