@@ -439,7 +439,6 @@ class Integer {
 		}
 
     private:
-        // ----template < typename T, typename C = std::vector<T> >
         // data
         // ----
         size_t digits; // number of digits
@@ -449,7 +448,9 @@ class Integer {
         // -----
         // valid
         // -----
-
+	/**
+         * checking the validity of the values inside the container
+         */
         bool valid () const {
 			typename C::iterator it;
 			// All numbers are 0-9
@@ -468,11 +469,13 @@ class Integer {
         // ------------
 
         /**
-         * <your documentation>
+         * Integer constructor for int value
+         * we are going to store the digit backward inside the vector container
+         * @param the int value that will be converted to an Integer object
+         * 
          */
         Integer (int value) {
-			typename C::iterator it, rev;
-
+			typename C::iterator it;
 			// Determine sign, and get absolute value
 			if (value < 0) {
 				value = -value;
@@ -480,9 +483,8 @@ class Integer {
 			} else {
 				sign = true;
 			}
-
-#if 0
-			// Count digits, and put one digit per node; reversed, though
+			//storing the least significant digit at index 0 and then 
+			//continue on storing it backward
 			digits = 0;
 			it = container.begin();
 			while (value > 0) {
@@ -490,24 +492,29 @@ class Integer {
 				value = value / 10;
 				++it; ++digits;
 			}
-
-			// write it forward
-			reverse_digits(container.begin(), container.end(), digits);
-
             assert(valid());
-#endif
 		}
 
         /**
-         * <your documentation>
+         * Integer constructor for a string
+         * we are also going to store the digit backward
          * @throws invalid_argument if value is not a valid representation of an Integer
          */
         explicit Integer (const std::string& value) {
-            // <your code>
+            // we are just going to start build the object out of the string value
+            // if the input is not valid, the valid() will fails and it will
+            // throw the exceptions
+            std::string::reverse_iterator str_rit = value.rbegin();
+            typename C::iterator it = container.begin();
+            while(str_rit!=value.rend()){
+            	*it = *str_rit;
+            	++it;
+            	++str_rit;
+            }
             if (!valid())
                 throw std::invalid_argument("Integer::Integer()");}
-
         // Default copy, destructor, and copy assignment.
+        // are provided by the compiler
         // Integer (const Integer&);
         // ~Integer ();
         // Integer& operator = (const Integer&);
