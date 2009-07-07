@@ -11,7 +11,7 @@
 #include <string>    // string
 #include <vector>    // vector
 #include <iterator>  // iterator_traits
-
+#include <cstdlib> //atoi
 // ----------
 // namespaces
 // ----------
@@ -452,10 +452,10 @@ class Integer {
          * checking the validity of the values inside the container
          */
         bool valid () const {
-			typename C::iterator it;
+			using namespace std;
+	  	        typename  C::const_iterator it = container.begin();
 			// All numbers are 0-9
 			// Leading numbers non-zero
-            		it = container.begin();
 			while (it != container.end()) {
 				if (*it < 0 || *it > 9) return false;
 				++it;
@@ -506,10 +506,10 @@ class Integer {
             // throw the exceptions
             std::string::reverse_iterator str_rit = value.rbegin();
             typename C::iterator it = container.begin();
-            while(str_rit!=value.rend()){
-            	*it = *str_rit;
-            	++it;
+            while(str_rit != value.rend()){
             	++str_rit;
+            	*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
+            	++it;
             }
             if (!valid())
                 throw std::invalid_argument("Integer::Integer()");}
