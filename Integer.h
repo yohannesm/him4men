@@ -78,11 +78,13 @@ add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
  * output the sum of the two input sequences into the output sequence
  * @note assumes the beginning of the sequence is the least significant digit,
  * and that the end of the sequence is one beyond the most sigificant digit.
+ * @note The parameters represented by b1/e1 and b2/e2 are assumed to be 
+ * non-negative integers.
  * (s1 + s2) => x
  */
 template <typename II1, typename II2, typename OI>
 OI plus_digits(II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-	int carry = 0;
+	typename std::iterator_traits<OI>::value_type carry = 0;
 
     while((b1 != e1) || (b2 != e2) || (carry != 0)) {
 	 	// add the next column of digits; include carry
@@ -98,10 +100,38 @@ OI plus_digits(II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 // minus_digits
 // ------------
 template <typename II1, typename II2, typename OI>
-int subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int borrow)
+typename std::iterator_traits<OI>::value_type 
+subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, 
+				 typename std::iterator_traits<OI>::value_type borrow_in)
 {
+	typename std::iterator_traits<OI>::value_type minuend, subtrahend;
+	typename std::iterator_traits<OI>::value_type borrow_out = 0;
+
+	// Start with the minuend's next digit
+	assert(b1 != e1);
+	minuend = *b1;
+	++b1;
 	
-	return 0;
+	// Subtrahend is the sum of the borrow and the next digit of sequence 2,
+	// if any
+	subtrahend = borrow_in;
+	if (b2 != e2) {
+		subtrahend += *b2;
+		b2++;
+	}
+
+	// Calculate any needed borrow
+	borrow_out = 0;
+	while (minuend < subtrahend) {
+		++borrow_out;
+		minuend += 10;
+	}
+
+	assert((minuend - subtrahend) < 10);
+	assert((minuend - subtrahend) >= 0);
+	*x = (minuend - subtrahend);
+	
+	return borrow_out;
 }
 
 
@@ -117,15 +147,25 @@ int subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, int borrow)
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the difference of the two input sequences into the output sequence
+ * @note The parameters represented by b1/e1 and b2/e2 are assumed to be 
+ * non-negative integers.
+ * @note Additionally, it is assumed that integer represented by the sequences
+ * s1 and s2 are provided such that s1 >= s2.
  * (s1 - s2) => x
  */
 template <typename II1, typename II2, typename OI>
 OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-    while(b1!=e1 && b2!=e2){
-    	*x = *b1 - *b2; // assigning x
-    	++b1; ++b2; ++x;
-    }
-    return x;}
+	typename std::iterator_traits<OI>::value_type borrow = 0;
+
+	while (b1 != e1) {
+		borrow = subtract_next_column(b1, e1, b2, e2, x, borrow);
+	}
+
+	assert(b2 == e2);
+	assert(borrow == 0);
+
+    return x;
+}
 
 // -----------------
 // multiplies_digits

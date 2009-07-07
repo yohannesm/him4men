@@ -147,8 +147,8 @@ struct TestInteger : CppUnit::TestFixture {
         const T b[] = {7, 6, 5};
         const T c[] = {1, 0, 8};
               T x[10];
+        const T* p = My::plus_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
-		std::cout << "P: " << (int)x[0] << (int)x[1] << (int)x[2] << std::endl;
         CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));
 
         const T a1[] = {4, 3, 2};
