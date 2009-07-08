@@ -297,18 +297,25 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * Checking whether 2 integer object: lhs and rhs is equal to each other
          */
         friend bool operator == (const Integer& lhs, const Integer& rhs) {
-            // <your code>
-            return false;}
+            //how do we check whether the object is just calling itself?
+            bool result = false;
+            //result = &lhs == &rhs; maybe by checking the address?
+            result = lhs.sign == rhs.sign;
+            result = lhs.container.size() == rhs.container.size();
+            if(!result) return result;
+            //check each element of the container
+            result = lhs.container == rhs.container;
+            return result;}
 
         // -----------
         // operator !=
         // -----------
 
         /**
-         * <your documentation>
+         * Checking whether 2 integer object: lhs and rhs is not equal to each other
          */
         friend bool operator != (const Integer& lhs, const Integer& rhs) {
             return !(lhs == rhs);}
@@ -318,7 +325,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * Checking whether the lhs object is less than the rhs object
          */
         friend bool operator < (const Integer& lhs, const Integer& rhs) {
             // <your code>
@@ -329,7 +336,7 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * Checking whether the lhs object is less than or equal to the rhs object
          */
         friend bool operator <= (const Integer& lhs, const Integer& rhs) {
             return !(rhs < lhs);}
@@ -339,7 +346,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * Checking whether the lhs object has bigger Integer value than the rhs object
          */
         friend bool operator > (const Integer& lhs, const Integer& rhs) {
             return (rhs < lhs);}
@@ -349,7 +356,7 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * Checking whether the lhs object has bigger or equal Integer value than the rhs object
          */
         friend bool operator >= (const Integer& lhs, const Integer& rhs) {
             return !(lhs < rhs);}
@@ -359,7 +366,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * adding 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator + (Integer lhs, const Integer& rhs) {
             return lhs += rhs;}
@@ -369,7 +376,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * subtracting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator - (Integer lhs, const Integer& rhs) {
             return lhs -= rhs;}
@@ -379,7 +386,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * multiplying 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator * (Integer lhs, const Integer& rhs) {
             return lhs *= rhs;}
@@ -389,10 +396,13 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * dividing 2 integer object an outputting a new Integer object for the result
+         * rhs can't be equal to zero
          * @throws invalid_argument if (rhs == 0)
          */
         friend Integer operator / (Integer lhs, const Integer& rhs) {
+            if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            	throw std::invalid_argument("Integer::operator /");
             return lhs /= rhs;}
 
         // ----------
@@ -400,7 +410,7 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * modding 2 integer object an outputting a new Integer object for the result
          * @throws invalid_argument if (rhs <= 0)
          */
         friend Integer operator % (Integer lhs, const Integer& rhs) {
@@ -411,7 +421,7 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * left shifting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator << (Integer lhs, int rhs) {
             return lhs <<= rhs;}
@@ -421,7 +431,7 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * right shifting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator >> (Integer lhs, int rhs) {
             return lhs >>= rhs;}
@@ -431,7 +441,7 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * Outputting the Integer object in order to the console/standard output
          */
         friend std::ostream& operator << (std::ostream& lhs, const Integer& rhs) {
             // <your code>
@@ -441,7 +451,8 @@ class Integer {
     private:
         // data
         // ----
-        size_t digits; // number of digits
+        // I don't think we need digits, we can just do container.size()
+        //size_t digits; // number of digits
 	bool sign; // true = positive & false = negative 
         C container;
 
@@ -485,12 +496,12 @@ class Integer {
 			}
 			//storing the least significant digit at index 0 and then 
 			//continue on storing it backward
-			digits = 0;
+			//digits = 0;
 			it = container.begin();
 			while (value > 0) {
 				*it = value % 10;
 				value = value / 10;
-				++it; ++digits;
+				++it; //++digits;
 			}
             assert(valid());
 		}
@@ -504,13 +515,15 @@ class Integer {
             // we are just going to start build the object out of the string value
             // if the input is not valid, the valid() will fails and it will
             // throw the exceptions
-            std::string::reverse_iterator str_rit = value.rbegin();
+	
+            //std::string::reverse_iterator str_rit = value.rbegin();
+		/*
             typename C::iterator it = container.begin();
             while(str_rit != value.rend()){
             	++str_rit;
             	*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
             	++it;
-            }
+            }*/
             if (!valid())
                 throw std::invalid_argument("Integer::Integer()");}
         // Default copy, destructor, and copy assignment.
@@ -524,7 +537,8 @@ class Integer {
         // ----------
 
         /**
-         * <your documentation>
+         * Unary minus operator for the Integer object, returning a new Integer object
+         * as a result
          */
         Integer operator - () const {
             // <your code>
@@ -535,14 +549,17 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * pre-increment operator for Integer object
+         * the returning result will be the object itself + 1
          */
         Integer& operator ++ () {
             *this += 1;
             return *this;}
 
         /**
-         * <your documentation>
+         * post-increment operator for Integer object
+         * the returning result will be the old value of the Integer object
+         * but after this operation is done the object itself will have +1 to its value
          */
         Integer operator ++ (int) {
             Integer x = *this;
@@ -554,14 +571,17 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * pre-decrement operator for Integer object
+         * the returning result will be the object itself - 1
          */
         Integer& operator -- () {
             *this -= 1;
             return *this;}
 
         /**
-         * <your documentation>
+         * post-decrement operator for Integer object
+         * the returning result will be the old value of the Integer object
+         * but after this operation is done the object itself will have -1 to its value
          */
         Integer operator -- (int) {
             Integer x = *this;
@@ -573,7 +593,8 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * += operator for Integer object, 
+         * the operation will return the modified object + value of rhs Integer
          */
         Integer& operator += (const Integer& rhs) {
             // <your code>
@@ -584,7 +605,8 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * -= operator for Integer object, 
+         * the operation will return the modified object - value of rhs Integer
          */
         Integer& operator -= (const Integer& rhs) {
             // <your code>
@@ -595,7 +617,8 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * *= operator for Integer object, 
+         * the operation will return the modified object * value of rhs Integer
          */
         Integer& operator *= (const Integer& rhs) {
             // <your code>
@@ -606,11 +629,13 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * /= operator for Integer object, 
+         * the operation will return the modified object / value of rhs Integer
          * @throws invalid_argument if (rhs == 0)
          */
         Integer& operator /= (const Integer& rhs) {
-            // <your code>
+            if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            	throw std::invalid_argument("Integer::operator/=");
             return *this;}
 
         // -----------
@@ -618,7 +643,8 @@ class Integer {
         // -----------
 
         /**
-         * <your documentation>
+         * %= operator for Integer object, 
+         * the operation will return the modified object % value of rhs Integer
          * @throws invalid_argument if (rhs <= 0)
          */
         Integer& operator %= (const Integer& rhs) {
@@ -630,7 +656,8 @@ class Integer {
         // ------------
 
         /**
-         * <your documentation>
+         * <<= operator for Integer object, 
+         * the operation will return the modified object << n
          */
         Integer& operator <<= (int n) {
             // <your code>
@@ -641,7 +668,8 @@ class Integer {
         // ------------
 
         /**
-         * <your documentation>
+         * <<= operator for Integer object, 
+         * the operation will return the modified object >> n
          */
         Integer& operator >>= (int n) {
             // <your code>
@@ -653,10 +681,14 @@ class Integer {
 
         /**
          * absolute value
-         * <your documentation>
+         * return the absolute value of an Integer object if it's negative
+         * return a copy of the Integer object if it's positive
          */
         Integer abs () const {
-            // <your code>
+            //need to return the absolute value if it's negative by sending
+            // -this to copy constructor?
+            //if(this->sign) return Integer(this);
+            //else
             return Integer(0);}
 
         // ---
@@ -665,7 +697,7 @@ class Integer {
 
         /**
          * power
-         * <your documentation>
+         * returns a new Integer object raised to the 'e' power 
          * @throws invalid_argument if (this == 0) && (e == 0)
          * @throws invalid_argument if (e < 0)
          */
