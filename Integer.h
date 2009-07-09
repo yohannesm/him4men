@@ -303,11 +303,11 @@ class Integer {
             //how do we check whether the object is just calling itself?
             bool result = false;
             //result = &lhs == &rhs; maybe by checking the address?
-            result = lhs.sign == rhs.sign;
+            /*result = lhs.sign == rhs.sign;
             result = lhs.container.size() == rhs.container.size();
             if(!result) return result;
             //check each element of the container
-            result = lhs.container == rhs.container;
+            result = lhs.container == rhs.container;*/
             return result;}
 
         // -----------
@@ -401,8 +401,8 @@ class Integer {
          * @throws invalid_argument if (rhs == 0)
          */
         friend Integer operator / (Integer lhs, const Integer& rhs) {
-            if((rhs.container.size == 1) && (rhs.container[0] == 0))
-            	throw std::invalid_argument("Integer::operator /");
+           // if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            	//throw std::invalid_argument("Integer::operator /");
             return lhs /= rhs;}
 
         // ----------
@@ -444,8 +444,13 @@ class Integer {
          * Outputting the Integer object in order to the console/standard output
          */
         friend std::ostream& operator << (std::ostream& lhs, const Integer& rhs) {
-            // <your code>
-            return lhs << "0";
+            typename C::const_iterator rit;
+            rit = rhs.container.end();
+            while(rit != rhs.container.begin()){
+            --rit;
+            lhs << *rit;
+            }
+            return lhs;
 		}
 
     private:
@@ -463,7 +468,7 @@ class Integer {
          * checking the validity of the values inside the container
          */
         bool valid () const {
-			using namespace std;
+			//using namespace std;
 	  	        typename  C::const_iterator it = container.begin();
 			// All numbers are 0-9
 			// Leading numbers non-zero
@@ -496,12 +501,11 @@ class Integer {
 			}
 			//storing the least significant digit at index 0 and then 
 			//continue on storing it backward
-			//digits = 0;
 			it = container.begin();
-			while (value > 0) {
+			while (value > 0 && it != container.end()) {
 				*it = value % 10;
 				value = value / 10;
-				++it; //++digits;
+				++it; 
 			}
             assert(valid());
 		}
@@ -515,17 +519,24 @@ class Integer {
             // we are just going to start build the object out of the string value
             // if the input is not valid, the valid() will fails and it will
             // throw the exceptions
-	
-            //std::string::reverse_iterator str_rit = value.rbegin();
-		/*
+	    using namespace std;
+	    string temp(value);
+	    // if it's a negative number
+	    if(temp.at(0)=='-'){
+	    	sign = false;
+	    	temp = temp.substr(1);
+	    	}
+	    else{ sign = true;}
+            std::string::reverse_iterator str_rit = temp.rbegin();
             typename C::iterator it = container.begin();
-            while(str_rit != value.rend()){
+            
+            while(str_rit != temp.rend() && it != container.end()){
             	++str_rit;
             	*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
             	++it;
-            }*/
+            }
             if (!valid())
-                throw std::invalid_argument("Integer::Integer()");}
+                throw std::invalid_argument("Integer::Integer(const std::string& value)");}
         // Default copy, destructor, and copy assignment.
         // are provided by the compiler
         // Integer (const Integer&);
@@ -634,8 +645,8 @@ class Integer {
          * @throws invalid_argument if (rhs == 0)
          */
         Integer& operator /= (const Integer& rhs) {
-            if((rhs.container.size == 1) && (rhs.container[0] == 0))
-            	throw std::invalid_argument("Integer::operator/=");
+          //  if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            //	throw std::invalid_argument("Integer::operator/=");
             return *this;}
 
         // -----------
