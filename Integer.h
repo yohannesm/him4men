@@ -18,6 +18,83 @@
 
 namespace My {
 
+
+template <typename II>
+void print_digits(II b, II &e)
+{
+	while (b != e) {
+		std::cout << *b;
+		b++;
+	}
+}
+
+// -----------------
+// shift_left_digits
+// -----------------
+
+/**
+ * @param b  an iterator to the beginning of an input  sequence (inclusive)
+ * @param e  an iterator to the end       of an input  sequence (exclusive)
+ * @param x  an iterator to the beginning of an output sequence (inclusive)
+ * @return   an iterator to the end       of an output sequence (exclusive)
+ * the sequences are of decimal digits
+ * output the shift left of the input sequence into the output sequence
+ * @note Assumes the digits are least significant first.
+ * (s << n) => x
+ */
+template <typename II, typename OI>
+OI shift_left_digits (II b, II e, int n, OI x) {
+	// Stream in the least significant zeroes produced by the shift
+	for (int i = 0; i < n; i++) {
+		*x = 0;
+		++x;
+	}
+
+    while (b != e) {
+    	*x = *b;
+    	++x; ++b;
+    }
+
+    return x;
+}
+
+// ------------------
+// shift_right_digits
+// ------------------
+
+/**
+ * @param b  an iterator to the beginning of an input  sequence (inclusive)
+ * @param e  an iterator to the end       of an input  sequence (exclusive)
+ * @param x  an iterator to the beginning of an output sequence (inclusive)
+ * @return   an iterator to the end       of an output sequence (exclusive)
+ * the sequences are of decimal digits
+ * output the shift right of the input sequence into the output sequence
+ * @note Assumes the digits are least significant first.
+ * (s >> n) => x
+ */
+template <typename II, typename OI>
+OI shift_right_digits (II b, II e, int n, OI x) {
+	// First, allow the original iterator to proceed along, not copying anything
+	// to the destination until we get n elements into the container
+	if (std::distance(b, e) <= n) {
+		*x = 0;
+		++x;
+		return x;
+	}
+
+	std::advance(b, n);
+	// Then, start copying elements into x, starting at the beginning of where
+	// b started.  Continue until we run out of input in e.
+	// If we are already at the end, we have shifted off the end of the input,
+	// so just output 0.
+	while (b != e) {
+		*x = *b;
+		++x; ++b;
+	}
+
+    return x;
+}
+
 // -----------
 // plus_digits
 // -----------
@@ -39,7 +116,6 @@ add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 	typename std::iterator_traits<OI>::value_type result = carry;
 	
 	result = carry;
-
 	// If there is more of the first input, add it
 	if (b1 != e1) {
 		result += *b1;
@@ -61,7 +137,7 @@ add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 
 	// Write the result
 	*x = result;
-	x++;
+	++x;
 
 	return carry;
 }
@@ -137,8 +213,6 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 
 
 
-
-
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
@@ -172,6 +246,28 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 // multiplies_digits
 // -----------------
 
+template <typename II, typename T, typename OI>
+OI multiply_digit(II b, II e, T digit, OI x)
+{
+	T carry = 0;
+	T mul_result = 0;
+
+	while (b != e) {
+		mul_result = ((*b) * digit) + carry;
+		*x		= mul_result % 10;
+		carry	= mul_result / 10;
+		++b; ++x;
+	}
+
+	// Handle final carry out
+	if (carry) {
+		*x = carry;
+		++x;
+	}
+	
+	return x;
+}
+
 /**
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
@@ -185,11 +281,42 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-     while(b1!=e1 && b2!=e2){
-    	*x = *b1 * *b2; // assigning x
-    	++b1; ++b2; ++x;
-    }
-    return x;}
+	typedef std::vector<typename std::iterator_traits<OI>::value_type> m_vector;
+	m_vector sum;
+	m_vector shifted;
+	m_vector mul;
+	typename m_vector::iterator sum_end;
+	typename m_vector::iterator shifted_end;
+	typename m_vector::iterator mul_end;
+
+	unsigned int shift = 0;
+	unsigned int s1_size = std::distance(b1, e1);
+	unsigned int s2_size = std::distance(b2, e2);
+
+	/* Reserve enough space in mul for s1 * 9 */
+	mul.resize(s1_size + 2, 0);
+	/* We shift by the number of digits in s2, plus the largest value in s1 */
+	shifted.resize(s2_size + s1_size + 2, 0);
+	/* The sum could be the size of the largest shifted number, plus a carry */
+	sum.resize(s2_size + s1_size + 2 + 1, 0);
+	sum_end = sum.begin();
+	
+	while (b2 != e2) {
+		mul_end = multiply_digit(b1, e1, *b2, mul.begin());
+		shifted_end = shift_left_digits(mul.begin(), mul_end,
+										shift, shifted.begin());
+		sum_end = plus_digits(sum.begin(), sum_end, shifted.begin(),
+							  shifted_end, sum.begin());
+		++shift; ++b2;
+	}
+
+	for(typename m_vector::iterator it = sum.begin(); it != sum_end; ++it) {
+			*x = *it;
+			++x;
+	}
+
+    return x;
+}
 
 // --------------
 // divides_digits
@@ -214,76 +341,6 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
     }
     return x;}
 
-// -----------------
-// shift_left_digits
-// -----------------
-
-/**
- * @param b  an iterator to the beginning of an input  sequence (inclusive)
- * @param e  an iterator to the end       of an input  sequence (exclusive)
- * @param x  an iterator to the beginning of an output sequence (inclusive)
- * @return   an iterator to the end       of an output sequence (exclusive)
- * the sequences are of decimal digits
- * output the shift left of the input sequence into the output sequence
- * (s << n) => x
- */
-template <typename II, typename OI>
-OI shift_left_digits (II b, II e, int n, OI x) {
-    while (b != e) {
-    	*x = *b;
-    	++b; ++x;
-    }
-	// Stream in the least significant zeroes produced by the shift
-	for (int i = 0; i < n; i++) {
-		*x = 0;
-	}
-
-    return x;
-}
-
-// ------------------
-// shift_right_digits
-// ------------------
-
-/**
- * @param b  an iterator to the beginning of an input  sequence (inclusive)
- * @param e  an iterator to the end       of an input  sequence (exclusive)
- * @param x  an iterator to the beginning of an output sequence (inclusive)
- * @return   an iterator to the end       of an output sequence (exclusive)
- * the sequences are of decimal digits
- * output the shift right of the input sequence into the output sequence
- * (s >> n) => x
- */
-template <typename II, typename OI>
-OI shift_right_digits (II b, II e, int n, OI x) {
-	int shift_count;
-	II shifted;
-
-	shifted = b;
-	shift_count = 0;
-	// First, allow the original iterator to proceed along, not copying anything
-	// to the destination until we get n elements into the container
-	while(b != e && shift_count < n) {
-		++b;
-		++shift_count;
-	}
-
-	// Then, start copying elements into x, starting at the beginning of where
-	// b started.  Continue until we run out of input in e.
-	// If we are already at the end, we have shifted off the end of the input,
-	// so just output 0.
-	if (b == e) {
-		*x = 0;
-		++x;
-	} else {
-		do {
-			*x = *shifted;
-			++shifted; ++x; ++b;
-		} while (b != e);
-	}
-
-    return x;
-}
 
 // -------
 // Integer
@@ -469,17 +526,17 @@ class Integer {
         // ----
         // I don't think we need digits, we can just do container.size()
         //size_t digits; // number of digits
-	bool sign; // true = positive & false = negative 
-        C container;
+		bool sign; // true = positive & false = negative 
+		C container;
 
         // -----
         // valid
         // -----
-	/**
+		/**
          * checking the validity of the values inside the container
          */
         bool valid () const {
-	  	        typename  C::const_iterator it = container.begin();
+	  	    typename C::const_iterator it = container.begin();
 			// All numbers are 0-9
 			// Leading numbers non-zero
 			while (it != container.end()) {
@@ -526,9 +583,9 @@ class Integer {
          * @throws invalid_argument if value is not a valid representation of an Integer
          */
         explicit Integer (const std::string& value) {
-            // we are just going to start build the object out of the string value
-            // if the input is not valid, the valid() will fails and it will
-            // throw the exceptions
+            // we are just going to start build the object out of the string
+			// value if the input is not valid, the valid() will fails and it
+			// will throw the exceptions
 	    using namespace std;
 	    string temp(value);
 	    // if it's a negative number
@@ -559,8 +616,8 @@ class Integer {
         // ----------
 
         /**
-         * Unary minus operator for the Integer object, returning a new Integer object
-         * as a result
+         * Unary minus operator for the Integer object, returning a new Integer
+		 * object as a result
          */
         Integer operator - () const {
             // <your code>
