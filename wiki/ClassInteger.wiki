@@ -1,0 +1,12 @@
+#Arbitrary precision Integer for calculating big prime number
+= Integer=
+
+We are implementing a generic integer class to be able to calculate a big integer number and we will not be limited with just a size of 32 bit. 
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
