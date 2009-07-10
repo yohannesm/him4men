@@ -298,16 +298,17 @@ class Integer {
 
         /**
          * Checking whether 2 integer object: lhs and rhs is equal to each other
+         * O(N) if the Integer objects are equal. 
          */
         friend bool operator == (const Integer& lhs, const Integer& rhs) {
             //how do we check whether the object is just calling itself?
             bool result = false;
             //result = &lhs == &rhs; maybe by checking the address?
-            /*result = lhs.sign == rhs.sign;
+            result = lhs.sign == rhs.sign;
             result = lhs.container.size() == rhs.container.size();
             if(!result) return result;
             //check each element of the container
-            result = lhs.container == rhs.container;*/
+            result = lhs.container == rhs.container;
             return result;}
 
         // -----------
@@ -328,8 +329,17 @@ class Integer {
          * Checking whether the lhs object is less than the rhs object
          */
         friend bool operator < (const Integer& lhs, const Integer& rhs) {
-            // <your code>
-            return false;}
+            if(lhs.container.size()<rhs.container.size()) return true;
+            else if(lhs == rhs) return false; 
+            else if(lhs.container.size()==rhs.container.size()) {
+            	//must check the least significant bit and if that's equal then
+            	// we move on till we can find something that is less or more than each other
+            	return true;
+            	}
+            else{
+           	 return false;
+            	}
+            }
 
         // -----------
         // operator <=
@@ -401,9 +411,10 @@ class Integer {
          * @throws invalid_argument if (rhs == 0)
          */
         friend Integer operator / (Integer lhs, const Integer& rhs) {
-           // if((rhs.container.size == 1) && (rhs.container[0] == 0))
-            	//throw std::invalid_argument("Integer::operator /");
-            return lhs /= rhs;}
+            if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            	throw std::invalid_argument("Integer::operator /");
+            return lhs /= rhs;
+            }
 
         // ----------
         // operator %
@@ -468,7 +479,6 @@ class Integer {
          * checking the validity of the values inside the container
          */
         bool valid () const {
-			//using namespace std;
 	  	        typename  C::const_iterator it = container.begin();
 			// All numbers are 0-9
 			// Leading numbers non-zero
@@ -529,14 +539,15 @@ class Integer {
 	    else{ sign = true;}
             std::string::reverse_iterator str_rit = temp.rbegin();
             typename C::iterator it = container.begin();
-            
             while(str_rit != temp.rend() && it != container.end()){
             	++str_rit;
-            	*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
+            	//*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
+            	*it = static_cast<T>((*str_rit) - '0');
             	++it;
             }
             if (!valid())
-                throw std::invalid_argument("Integer::Integer(const std::string& value)");}
+                throw std::invalid_argument("Integer::Integer(const std::string& value)");
+               }
         // Default copy, destructor, and copy assignment.
         // are provided by the compiler
         // Integer (const Integer&);
