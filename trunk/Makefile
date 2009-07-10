@@ -1,7 +1,7 @@
 VALGRIND ?= valgrind
 DOXYGEN ?= doxygen
 CC = g++
-EXTRA_CPPFLAGS += -ansi -pedantic -Wall
+EXTRA_CPPFLAGS += -g -ggdb -ansi -pedantic -Wall
 TEST_LDFLAGS = -lcppunit -ldl
 TEST_CPPFLAGS = -DTEST
 EXECUTABLE = main.app

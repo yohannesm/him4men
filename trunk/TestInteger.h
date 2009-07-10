@@ -105,14 +105,15 @@ struct TestInteger : CppUnit::TestFixture {
     // test_multiplies_digits
     // ----------------------
 
+	template <typename T>
     void test_multiplies_digits () {
-        const int a[] = {2, 3, 4};
-        const int b[] = {5, 6, 7};
-        const int c[] = {1, 3, 2, 6, 7, 8};
-              int x[10];
-        const int* p = My::multiplies_digits(a, a + 3, b, b + 3, x);
+        const T a[] = {4, 3, 2};
+        const T b[] = {7, 6, 5};
+        const T c[] = {8, 7, 6, 2, 3, 1};
+              T x[10];
+        const T* p = My::multiplies_digits(a, a + 3, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 6);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));}
 
     // -------------
     // test_negation
@@ -192,14 +193,14 @@ struct TestInteger : CppUnit::TestFixture {
 
     void test_shift_left_digits () {
         const int a[] = {2, 3, 4};
-        const int b[] = {2, 3, 4, 0, 0};
+        const int b[] = {0, 0, 2, 3, 4};
         int x[10];
         const int* p = My::shift_left_digits(a, a + 3, 2, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
 
-		memset(x, 0, 10 * sizeof(int));
-        const int* p1 = My::shift_left_digits(a, a + 3, 0, x);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p1, a));
+        int x1[10];
+        const int* p1 = My::shift_left_digits(a, a + 3, 0, x1);
+        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x1), p1, a));
 	}
 		
 
@@ -209,7 +210,7 @@ struct TestInteger : CppUnit::TestFixture {
 
     void test_shift_right_digits () {
         const int a[] = {2, 3, 4};
-        const int b[] = {2};
+        const int b[] = {4};
               int x[10];
         const int *p = My::shift_right_digits(a, a + 3, 2, x);
         CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, b));
@@ -240,12 +241,13 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_plus_digits<char>);
     CPPUNIT_TEST(test_minus_digits<int>);
     CPPUNIT_TEST(test_minus_digits<char>);
+    CPPUNIT_TEST(test_multiplies_digits<int>);
+    CPPUNIT_TEST(test_multiplies_digits<char>);
+    //CPPUNIT_TEST(test_divides_digits);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
     CPPUNIT_TEST(test_abs);
-    CPPUNIT_TEST(test_divides_digits);
-    CPPUNIT_TEST(test_multiplies_digits);
     CPPUNIT_TEST(test_negation);
     CPPUNIT_TEST(test_output);
     CPPUNIT_TEST(test_pow);
