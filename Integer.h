@@ -29,11 +29,14 @@ void print_digits(II b, II &e)
 }
 
 
+#if 0
+/**
+ *
+ */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 {
 	unsigned int s1_len, s2_len;
-	bool is_less;
 
 	s1_len = distance(b1, e1);
 	s2_len = distance(b2, e2);
@@ -45,6 +48,9 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 		++b1; ++b2;
 	}
 }
+
+
+
 
 template <typename II1, typename II2>
 bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -60,6 +66,7 @@ bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 	}
 	return (b2 == e2);
 }
+#endif
 
 // -----------------
 // shift_left_digits
@@ -351,6 +358,7 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
     return x;
 }
 
+#if 0
 // --------------
 // divides_digits
 // --------------
@@ -368,11 +376,17 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-     while(b1!=e1 && b2!=e2){
-    	*x = *b1 / *b2; // assigning x
-    	++b1; ++b2; ++x;
-    }
-    return x;}
+	II2 numerator_end = b1;
+	II2 last_end = b1;
+	while (b1 != e1) {
+		numerator_end++;
+		while (less_than_digits(b2, e2, b1, numerator_end)) {
+			++numerator_end;
+			++b1;
+		}
+	}
+}
+#endif
 
 
 // -------
@@ -591,7 +605,6 @@ class Integer {
          * 
          */
         Integer (int value) {
-			typename C::iterator it;
 			// Determine sign, and get absolute value
 			if (value < 0) {
 				value = -value;
@@ -601,11 +614,9 @@ class Integer {
 			}
 			//storing the least significant digit at index 0 and then 
 			//continue on storing it backward
-			it = container.begin();
-			while (value > 0 && it != container.end()) {
-				*it = value % 10;
+			while (value > 0) {
+				container.push_back(value % 10);
 				value = value / 10;
-				++it; 
 			}
             assert(valid());
 		}
@@ -619,21 +630,25 @@ class Integer {
             // we are just going to start build the object out of the string
 			// value if the input is not valid, the valid() will fails and it
 			// will throw the exceptions
-	    using namespace std;
-	    string temp(value);
-	    // if it's a negative number
-	    if(temp.at(0)=='-'){
-	    	sign = false;
-	    	temp = temp.substr(1);
-	    	}
-	    else{ sign = true;}
-            std::string::reverse_iterator str_rit = temp.rbegin();
+	    	using namespace std;
+			unsigned int len = value.length();
+			unsigned int count = 0;
+	    	// if it's a negative number
+	    	if(value.at(0)=='-'){
+	    		sign = false;
+	    		len -= 1;
+	    		}
+	    	else{ sign = true;}
+			
+			container.resize(len, 0);
+            std::string::const_iterator str_rit = value.end();
             typename C::iterator it = container.begin();
-            while(str_rit != temp.rend() && it != container.end()){
-            	++str_rit;
+			
+            while(count < len && it != container.end()) {
+            	--str_rit;
             	//*it = std::atoi(reinterpret_cast<const char*>(*str_rit));
             	*it = static_cast<T>((*str_rit) - '0');
-            	++it;
+            	++it; ++count;
             }
             if (!valid())
                 throw std::invalid_argument("Integer::Integer(const std::string& value)");
