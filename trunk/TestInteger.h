@@ -135,6 +135,7 @@ struct TestInteger : CppUnit::TestFixture {
             const My::Integer<int> x = 98765;
             std::ostringstream out;
             out << x;
+	    std::cout <<"What is out.str()" << out.str();
             CPPUNIT_ASSERT(out.str() == "98765");}
         catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);}}
