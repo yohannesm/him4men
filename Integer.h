@@ -20,7 +20,7 @@ namespace My {
 
 
 template <typename II>
-void print_digits(II b, II &e)
+void print_digits(II b, II e)
 {
 	while (b != e) {
 		std::cout << *b;
@@ -30,8 +30,8 @@ void print_digits(II b, II &e)
 
 
 /**
- * @note Assumes the iterators are iterating such that bX points at the MOST
- * significant digit, and eX points just past the LEAST significant byte.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the MOST significant byte.
  */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -41,10 +41,12 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 	s1_len = distance(b1, e1);
 	s2_len = distance(b2, e2);
 	if (s1_len < s2_len) return true;
+	if (s1_len > s2_len) return false;
 
-	while (b1 != e1) {
-		if (*b1 > *b2) return false;
-		++b1; ++b2;
+	while (e1 != b1) {
+		--e1; --e2;
+		if (*e1 > *e2) return false;
+		if (*e1 < *e2) return true;
 	}
 
 	return true;
@@ -379,7 +381,14 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 // divides_digits
 // --------------
 
+
 /**
+ * Algorithm:
+ * Create a new vector; this will be the temporary numerator.  There will be
+ * two iterators that point to this vector; initialize them both to the
+ * beginning of s1 for now.
+ * Interatively, while there are still numbers left in the numerator:
+ *    
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
  * @param b2 an iterator to the beginning of an input  sequence (inclusive)
@@ -388,20 +397,76 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the division of the two input sequences into the output sequence
- * @note Assumes the iterators are iterating such that bX points at the MOST
- * significant digit, and eX points just past the LEAST significant byte.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the MOST significant byte.
  * (s1 / s2) => x
+ * s1 is the numerator, s2 is the denominator.
  */
 template <typename II1, typename II2, typename OI>
 OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-	II2 numerator_end = b1;
-	II2 last_end = b1;
-	while (b1 != e1) {
-		numerator_end++;
-		while (less_than_digits(b2, e2, b1, numerator_end)) {
-			++numerator_end;
-			++b1;
-		}
+	typedef std::vector<typename std::iterator_traits<OI>::value_type> d_vector;
+	d_vector numer; /* This one is MOST signaificant first...pay attention */
+	d_vector denom;
+	d_vector mul_result;
+	d_vector prev_mul;
+	d_vector tmp;
+	typename d_vector::iterator tmp_end;
+	typename std::iterator_traits<OI>::value_type div_digit;
+
+	/* Will always hold the denominator */
+	denom.assign(b2, e2);
+	std::cout << std::endl;
+	std::cout << "Denom: ";
+	print_digits(denom.rbegin(), denom.rend());
+	std::cout << std::endl;
+
+	// Loop until we run out of numerator
+	while (e1 != b1) {
+		do {
+			std::cout << "  trying numerator: ";
+			--e1;
+			numer.push_back(*e1);
+			print_digits(numer.rbegin(), numer.rend());
+			std::cout << std::endl;
+		} while (less_than_digits(numer.rbegin(), numer.rend(),
+								  denom.begin(), denom.end()));
+
+		std::cout << "  FOUND: ";
+		print_digits(numer.begin(), numer.end());
+		std::cout << std::endl;
+		div_digit = 0;
+		prev_mul.clear();
+		mul_result.assign(denom.begin(), denom.end());
+		do {
+			++div_digit;
+			prev_mul = mul_result;
+			tmp.clear();
+			tmp.resize(mul_result.size() + 1, 0);
+			tmp_end = plus_digits(mul_result.begin(), mul_result.end(),
+	 				    		  denom.begin(), denom.end(), tmp.begin());
+			mul_result.assign(tmp.begin(), tmp_end);
+			std::cout << "  trying " << (div_digit + 1) << " * ";
+			print_digits(denom.rbegin(), denom.rend());
+			std::cout << " = ";
+			print_digits(mul_result.rbegin(), mul_result.rend());
+			std::cout << std::endl;
+		} while (less_than_digits(mul_result.begin(), mul_result.end(),
+								  numer.rbegin(), numer.rend()));
+		std::cout << " Divisor is: " << div_digit << std::endl;
+		
+		*x = div_digit;
+		++x;
+		/* Prev_mul now holds the number to be subtracted from numerator */
+		std::cout << std::endl;
+		tmp.resize(distance(numer.begin(), numer.end()), 0);
+		tmp_end = minus_digits(numer.rbegin(), numer.rend(),
+				   	 		   prev_mul.begin(), prev_mul.end(), tmp.begin());
+		std::cout << "new numerator: ";
+		print_digits(tmp.begin(), tmp.end());
+		numer.assign(tmp.begin(), tmp_end);
+		std::cout << "; after assignment: ";
+		print_digits(numer.begin(), numer.end());
+		std::cout << std::endl;
 	}
 	return x;
 }
