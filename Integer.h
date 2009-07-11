@@ -29,7 +29,6 @@ void print_digits(II b, II &e)
 }
 
 
-#if 0
 /**
  *
  */
@@ -37,6 +36,7 @@ template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 {
 	unsigned int s1_len, s2_len;
+	bool is_less;
 
 	s1_len = distance(b1, e1);
 	s2_len = distance(b2, e2);
@@ -51,6 +51,7 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 
 
 
+#if 0
 
 template <typename II1, typename II2>
 bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
