@@ -229,9 +229,11 @@ OI plus_digits(II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 template <typename II1, typename II2, typename OI>
 typename std::iterator_traits<OI>::value_type 
 subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, 
-				 typename std::iterator_traits<OI>::value_type borrow_in)
+				 	  typename std::iterator_traits<OI>::value_type borrow_in,
+					  unsigned int &pending_zeroes)
 {
 	typename std::iterator_traits<OI>::value_type minuend, subtrahend;
+	typename std::iterator_traits<OI>::value_type result;
 	typename std::iterator_traits<OI>::value_type borrow_out = 0;
 
 	// Start with the minuend's next digit
@@ -254,10 +256,22 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 		minuend += 10;
 	}
 
-	assert((minuend - subtrahend) < 10);
-	assert((minuend - subtrahend) >= 0);
-	*x = (minuend - subtrahend);
-	++x;
+	result = minuend - subtrahend;
+	assert((result) < 10);
+	assert((result) >= 0);
+	
+	if (result == 0) {
+		++pending_zeroes;
+	} else {
+		// Result non-zero; handle pending zeroes
+		while (pending_zeroes > 0) {
+			*x = 0;
+			++x; --pending_zeroes;
+		}
+		assert(pending_zeroes == 0);
+		*x = result;
+		++x;
+	}
 	
 	return borrow_out;
 }
@@ -284,9 +298,17 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 template <typename II1, typename II2, typename OI>
 OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 	typename std::iterator_traits<OI>::value_type borrow = 0;
+	unsigned int zeroes = 0;
+	bool all_zeroes = true;
 
 	while (b1 != e1) {
-		borrow = subtract_next_column(b1, e1, b2, e2, x, borrow);
+		borrow = subtract_next_column(b1, e1, b2, e2, x, borrow, zeroes);
+		if (all_zeroes && (zeroes == 0)) all_zeroes = false;
+	}
+
+	if (all_zeroes) {
+		*x = 0;
+		x++;
 	}
 
 	assert(b2 == e2);
@@ -383,12 +405,6 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 
 
 /**
- * Algorithm:
- * Create a new vector; this will be the temporary numerator.  There will be
- * two iterators that point to this vector; initialize them both to the
- * beginning of s1 for now.
- * Interatively, while there are still numbers left in the numerator:
- *    
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
  * @param b2 an iterator to the beginning of an input  sequence (inclusive)
@@ -409,8 +425,10 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 	d_vector denom;
 	d_vector mul_result;
 	d_vector prev_mul;
+	d_vector result;
 	d_vector tmp;
 	typename d_vector::iterator tmp_end;
+	typename d_vector::reverse_iterator out_it;
 	typename std::iterator_traits<OI>::value_type div_digit;
 
 	/* Will always hold the denominator */
@@ -426,7 +444,7 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 			std::cout << "  trying numerator: ";
 			--e1;
 			numer.push_back(*e1);
-			print_digits(numer.rbegin(), numer.rend());
+			print_digits(numer.begin(), numer.end());
 			std::cout << std::endl;
 		} while (less_than_digits(numer.rbegin(), numer.rend(),
 								  denom.begin(), denom.end()));
@@ -454,20 +472,28 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 								  numer.rbegin(), numer.rend()));
 		std::cout << " Divisor is: " << div_digit << std::endl;
 		
-		*x = div_digit;
-		++x;
+		result.push_back(div_digit);
 		/* Prev_mul now holds the number to be subtracted from numerator */
-		std::cout << std::endl;
 		tmp.resize(distance(numer.begin(), numer.end()), 0);
+		std::cout << "  calculating ";
+		print_digits(numer.begin(), numer.end());
+		std::cout << " - ";
+		print_digits(prev_mul.rbegin(), prev_mul.rend());
+		std::cout << " = ";
 		tmp_end = minus_digits(numer.rbegin(), numer.rend(),
 				   	 		   prev_mul.begin(), prev_mul.end(), tmp.begin());
-		std::cout << "new numerator: ";
-		print_digits(tmp.begin(), tmp.end());
-		numer.assign(tmp.begin(), tmp_end);
-		std::cout << "; after assignment: ";
+		tmp.resize(distance(tmp.begin(), tmp_end));
+		numer.assign(tmp.rbegin(), tmp.rend());
 		print_digits(numer.begin(), numer.end());
 		std::cout << std::endl;
 	}
+	
+	out_it = result.rbegin();
+	while(out_it != result.rend()) {
+		*x = *out_it;
+		++x; ++out_it;
+	}
+	
 	return x;
 }
 

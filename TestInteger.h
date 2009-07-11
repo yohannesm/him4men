@@ -60,14 +60,15 @@ struct TestInteger : CppUnit::TestFixture {
     // test_divides_digits
     // -------------------
 
+	template <typename T>
     void test_divides_digits () {
-        const int a[] = {8, 7, 6, 2, 3, 1};
-        const int b[] = {7, 6, 5};
-        const int c[] = {4, 3, 2};
-              int x[10];
-        const int* p = My::divides_digits(a, a + 6, b, b + 3, x);
+        const T a[] = {8, 7, 6, 2, 3, 1};
+        const T b[] = {7, 6, 5};
+        const T c[] = {4, 3, 2};
+              T x[10];
+        const T* p = My::divides_digits(a, a + 6, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
-        CPPUNIT_ASSERT(std::equal(const_cast<const int*>(x), p, c));}
+        CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));}
 
     // -------------
     // test_equal_to
@@ -244,7 +245,8 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_minus_digits<char>);
     CPPUNIT_TEST(test_multiplies_digits<int>);
     CPPUNIT_TEST(test_multiplies_digits<char>);
-    CPPUNIT_TEST(test_divides_digits);
+    CPPUNIT_TEST(test_divides_digits<int>);
+    CPPUNIT_TEST(test_divides_digits<char>);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
