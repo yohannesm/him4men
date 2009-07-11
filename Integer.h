@@ -358,7 +358,6 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
     return x;
 }
 
-#if 0
 // --------------
 // divides_digits
 // --------------
@@ -376,6 +375,7 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  */
 template <typename II1, typename II2, typename OI>
 OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
+#if 0
 	II2 numerator_end = b1;
 	II2 last_end = b1;
 	while (b1 != e1) {
@@ -385,8 +385,9 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 			++b1;
 		}
 	}
-}
 #endif
+	return x;
+}
 
 
 // -------
@@ -405,15 +406,14 @@ class Integer {
          * O(N) if the Integer objects are equal. 
          */
         friend bool operator == (const Integer& lhs, const Integer& rhs) {
-            //how do we check whether the object is just calling itself?
-            bool result = false;
-            //result = &lhs == &rhs; maybe by checking the address?
-            result = lhs.sign == rhs.sign;
-            result = lhs.container.size() == rhs.container.size();
-            if(!result) return result;
+			// If called with yourself, this is true
+			if (&lhs == &rhs) return true;
+
+            if (lhs.sign != rhs.sign) return false;
+            if (lhs.container.size() != rhs.container.size()) return false;
             //check each element of the container
-            result = lhs.container == rhs.container;
-            return result;}
+            return (lhs.container == rhs.container);
+		}
 
         // -----------
         // operator !=
@@ -423,7 +423,8 @@ class Integer {
          * Checking whether 2 integer object: lhs and rhs is not equal to each other
          */
         friend bool operator != (const Integer& lhs, const Integer& rhs) {
-            return !(lhs == rhs);}
+            return !(lhs == rhs);
+		}
 
         // ----------
         // operator <
@@ -433,17 +434,23 @@ class Integer {
          * Checking whether the lhs object is less than the rhs object
          */
         friend bool operator < (const Integer& lhs, const Integer& rhs) {
-            if(lhs.container.size()<rhs.container.size()) return true;
-            else if(lhs == rhs) return false; 
-            else if(lhs.container.size()==rhs.container.size()) {
-            	//must check the least significant bit and if that's equal then
-            	// we move on till we can find something that is less or more than each other
-            	return true;
-            	}
-            else{
-           	 return false;
-            	}
+			// Check signs - if they are different, handle this first
+			if (!lhs.sign && rhs.sign) return true;
+			if (lhs.sign && !rhs.sign) return false;
+			// We know all signs are the same; handle size differences
+            if (lhs.container.size() < rhs.container.size()) return (lhs.sign);
+			if (lhs.container.size() > rhs.container.size()) return (!lhs.sign);
+			// Same size, same sign - compare all digits until difference
+            if(lhs.container.size() == rhs.container.size()) {
+				typename C::const_iterator lhs_it = lhs.container.end();
+				typename C::const_iterator rhs_it = rhs.container.end();
+				while (lhs_it != lhs.container.begin()) {
+					--lhs_it; --rhs_it;
+					if (*lhs_it >= *rhs_it) return (!lhs.sign);
+				}
+            	return (lhs.sign);
             }
+        }
 
         // -----------
         // operator <=
@@ -668,8 +675,11 @@ class Integer {
 		 * object as a result
          */
         Integer operator - () const {
-            // <your code>
-            return Integer(0);}
+			Integer copy = *this;
+			copy.sign = (!copy.sign);
+			
+            return copy;
+		}
 
         // -----------
         // operator ++
@@ -724,8 +734,15 @@ class Integer {
          * the operation will return the modified object + value of rhs Integer
          */
         Integer& operator += (const Integer& rhs) {
-            // <your code>
-            return *this;}
+			if (this->sign ^ rhs.sign) {
+				
+				// call minus
+			}
+			plus_digits(this->container.begin(), this->container.end(),
+						rhs.container.begin(), rhs.container.end(),
+						this->container.begin());
+            return *this;
+		}
 
         // -----------
         // operator -=
@@ -737,7 +754,8 @@ class Integer {
          */
         Integer& operator -= (const Integer& rhs) {
             // <your code>
-            return *this;}
+            return *this;
+		}
 
         // -----------
         // operator *=
@@ -776,7 +794,8 @@ class Integer {
          */
         Integer& operator %= (const Integer& rhs) {
             // <your code>
-            return *this;}
+            return *this;
+		}
 
         // ------------
         // operator <<=
@@ -787,8 +806,19 @@ class Integer {
          * the operation will return the modified object << n
          */
         Integer& operator <<= (int n) {
-            // <your code>
-            return *this;}
+            int i, len;
+			len = this->container.size();
+			this->container.resize(len + n);
+			for (i = (len - 1); i >= 0; i--) {
+				this->container[i + n] = this->container[i];
+			}
+
+			for (i = 0; i < n; i++) {
+				this->container[i] = 0;
+			}
+
+            return *this;
+		}
 
         // ------------
         // operator >>=
@@ -799,8 +829,13 @@ class Integer {
          * the operation will return the modified object >> n
          */
         Integer& operator >>= (int n) {
-            // <your code>
-            return *this;}
+			typename C::iterator it;
+
+			it = this->container.begin();
+			it.advance(n);
+			this->container.erase(this->container.begin(), it);
+            return *this;
+		}
 
         // ---
         // abs
@@ -812,11 +847,13 @@ class Integer {
          * return a copy of the Integer object if it's positive
          */
         Integer abs () const {
-            //need to return the absolute value if it's negative by sending
-            // -this to copy constructor?
-            //if(this->sign) return Integer(this);
-            //else
-            return Integer(0);}
+			if (this->sign) {
+            	Integer copy = *this;
+				return copy;
+			} else {
+				return -(*this);
+			}
+		}
 
         // ---
         // pow
@@ -830,7 +867,9 @@ class Integer {
          */
         Integer pow (int e) const {
             // <your code>
-            return Integer(0);}};
+            return Integer(0);
+		}
+	};
 
 } // My
 

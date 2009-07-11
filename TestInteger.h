@@ -138,7 +138,6 @@ struct TestInteger : CppUnit::TestFixture {
             const My::Integer<int> x = 98765;
             std::ostringstream out;
             out << x;
-	    std::cout <<"What is out.str(): " << out.str() << std::endl;
             CPPUNIT_ASSERT(out.str() == "98765");}
         catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);}}
@@ -185,9 +184,11 @@ struct TestInteger : CppUnit::TestFixture {
             const My::Integer<int> y = x.pow(e);
             CPPUNIT_ASSERT(x == 98765);
             CPPUNIT_ASSERT(e ==  9867);
-            CPPUNIT_ASSERT(y ==     0);}
-        catch (std::invalid_argument& e) {
-            CPPUNIT_ASSERT(false);}}
+            CPPUNIT_ASSERT(y ==     0);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);
+		}
+	}
 
     // ----------------------
     // test_shift_left_digits
