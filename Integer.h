@@ -30,7 +30,8 @@ void print_digits(II b, II &e)
 
 
 /**
- * @note Expects b1 and b2 to point to the MOST significant digit.
+ * @note Assumes the iterators are iterating such that bX points at the MOST
+ * significant digit, and eX points just past the LEAST significant byte.
  */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -50,7 +51,10 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 }
 
 
-
+/**
+ * @note This function is AGNOSTIC to digit ordering; either LEAST or MOST may
+ * be first.
+ */
 template <typename II1, typename II2>
 bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 {
@@ -79,7 +83,8 @@ bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the shift left of the input sequence into the output sequence
- * @note Assumes the digits are least significant first.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
  * (s << n) => x
  */
 template <typename II, typename OI>
@@ -109,7 +114,8 @@ OI shift_left_digits (II b, II e, int n, OI x) {
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the shift right of the input sequence into the output sequence
- * @note Assumes the digits are least significant first.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
  * (s >> n) => x
  */
 template <typename II, typename OI>
@@ -139,15 +145,18 @@ OI shift_right_digits (II b, II e, int n, OI x) {
 // plus_digits
 // -----------
 
-// Given two sets of iterators, add the next right-most column with the carry,
-// put the result in the output iterator, and return the carry.
-// @param Iterator to beginning (left-most digit) of input 1
-// @param Iterator to one past the end (current right-most digit) of input 1
-// @param Iterator to beginning (left-most digit) of input 2
-// @param Iterator to one past the end (current right-most digit) of input 2
-// @param Iterator to the output
-// @post x is moved one digit to the right.
-// @return The new carry value for this column.
+/** Given two sets of iterators, add the next right-most column with the carry,
+ * put the result in the output iterator, and return the carry.
+ * @param Iterator to beginning (left-most digit) of input 1
+ * @param Iterator to one past the end (current right-most digit) of input 1
+ * @param Iterator to beginning (left-most digit) of input 2
+ * @param Iterator to one past the end (current right-most digit) of input 2
+ * @param Iterator to the output
+ * @post x is moved one digit to the right.
+ * @return The new carry value for this column.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
+ */
 template <typename II1, typename II2, typename OI>
 typename std::iterator_traits<OI>::value_type 
 add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x, 
@@ -192,8 +201,8 @@ add_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the sum of the two input sequences into the output sequence
- * @note assumes the beginning of the sequence is the least significant digit,
- * and that the end of the sequence is one beyond the most sigificant digit.
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
  * @note The parameters represented by b1/e1 and b2/e2 are assumed to be 
  * non-negative integers.
  * (s1 + s2) => x
@@ -262,6 +271,8 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the difference of the two input sequences into the output sequence
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
  * @note The parameters represented by b1/e1 and b2/e2 are assumed to be 
  * non-negative integers.
  * @note Additionally, it is assumed that integer represented by the sequences
@@ -286,6 +297,10 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 // multiplies_digits
 // -----------------
 
+/**
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
+ */
 template <typename II, typename T, typename OI>
 OI multiply_digit(II b, II e, T digit, OI x)
 {
@@ -317,6 +332,8 @@ OI multiply_digit(II b, II e, T digit, OI x)
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the product of the two input sequences into the output sequence
+ * @note Assumes the iterators are iterating such that bX points at the LEAST
+ * significant digit, and eX points just past the LEAST significant byte.
  * (s1 * s2) => x
  */
 template <typename II1, typename II2, typename OI>
@@ -371,11 +388,12 @@ OI multiplies_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
  * output the division of the two input sequences into the output sequence
+ * @note Assumes the iterators are iterating such that bX points at the MOST
+ * significant digit, and eX points just past the LEAST significant byte.
  * (s1 / s2) => x
  */
 template <typename II1, typename II2, typename OI>
 OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
-#if 0
 	II2 numerator_end = b1;
 	II2 last_end = b1;
 	while (b1 != e1) {
@@ -385,7 +403,6 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 			++b1;
 		}
 	}
-#endif
 	return x;
 }
 
