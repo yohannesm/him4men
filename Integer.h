@@ -567,6 +567,7 @@ class Integer {
          */
         friend std::ostream& operator << (std::ostream& lhs, const Integer& rhs) {
             typename C::const_iterator rit;
+			if (!rhs.sign) lhs << "-";
             rit = rhs.container.end();
             while(rit != rhs.container.begin()){
             --rit;
