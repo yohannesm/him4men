@@ -736,8 +736,33 @@ class Integer {
          */
         Integer& operator += (const Integer& rhs) {
 			if (this->sign ^ rhs.sign) {
-				
-				// call minus
+				if (this->abs() == rhs.abs()) {
+					container.clear();
+					container.push_back(0);
+				}
+
+				// Four cases - first, they need to be submitted to minus with
+				// the largest one first; so, if we need to switch their order,
+				// we reverse the sign.
+				// Ex: 9 - 18 = -(18 - 9)
+				// FIXME: Maybe use swap here instead
+				C copy = *this->container;
+				typename C::iterator end;
+				if (this >= rhs) {
+						end = minus_digits(copy.begin(),
+									 	   copy.end(),
+									 	   rhs.container.begin(),
+									 	   rhs.container.end(),
+									 	   this->container.begin());
+				} else {
+						end = minus_digits(rhs.container.begin(),
+									 	   rhs.container.end(),
+									 	   copy.begin(),
+									 	   copy.end(),
+									 	   this->container.begin());
+						this->sign = !this->sign;
+				}
+				this->container.resize(distance(this->container.begin(), end));
 			}
 			plus_digits(this->container.begin(), this->container.end(),
 						rhs.container.begin(), rhs.container.end(),
@@ -754,7 +779,7 @@ class Integer {
          * the operation will return the modified object - value of rhs Integer
          */
         Integer& operator -= (const Integer& rhs) {
-            // <your code>
+
             return *this;
 		}
 
@@ -767,8 +792,14 @@ class Integer {
          * the operation will return the modified object * value of rhs Integer
          */
         Integer& operator *= (const Integer& rhs) {
-            // <your code>
-            return *this;}
+			C copy = this->container;
+			this->sign = (this->sign ^ rhs.sign);
+			multiplies_digits(this->container.begin(), this->container.end(),
+						      rhs.container.begin(), rhs.container.end(),
+						      copy.begin());
+			std::swap(this->container, copy);
+			return *this;
+		}
 
         // -----------
         // operator /=
@@ -780,9 +811,14 @@ class Integer {
          * @throws invalid_argument if (rhs == 0)
          */
         Integer& operator /= (const Integer& rhs) {
-          //  if((rhs.container.size == 1) && (rhs.container[0] == 0))
-            //	throw std::invalid_argument("Integer::operator/=");
-            return *this;}
+			C copy = this->container;
+			this->sign = (this->sign ^ rhs.sign);
+			divides_digits(this->container.begin(), this->container.end(),
+						    rhs.container.begin(), rhs.container.end(),
+						    copy.begin());
+			std::swap(this->container, copy);
+            return *this;
+		}
 
         // -----------
         // operator %=
@@ -794,6 +830,7 @@ class Integer {
          * @throws invalid_argument if (rhs <= 0)
          */
         Integer& operator %= (const Integer& rhs) {
+			// this - ((this / rhs) * rhs)
             // <your code>
             return *this;
 		}
