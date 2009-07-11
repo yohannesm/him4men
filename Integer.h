@@ -433,25 +433,15 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 
 	/* Will always hold the denominator */
 	denom.assign(b2, e2);
-	std::cout << std::endl;
-	std::cout << "Denom: ";
-	print_digits(denom.rbegin(), denom.rend());
-	std::cout << std::endl;
 
 	// Loop until we run out of numerator
 	while (e1 != b1) {
 		do {
-			std::cout << "  trying numerator: ";
 			--e1;
 			numer.push_back(*e1);
-			print_digits(numer.begin(), numer.end());
-			std::cout << std::endl;
 		} while (less_than_digits(numer.rbegin(), numer.rend(),
 								  denom.begin(), denom.end()));
 
-		std::cout << "  FOUND: ";
-		print_digits(numer.begin(), numer.end());
-		std::cout << std::endl;
 		div_digit = 0;
 		prev_mul.clear();
 		mul_result.assign(denom.begin(), denom.end());
@@ -463,29 +453,16 @@ OI divides_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 			tmp_end = plus_digits(mul_result.begin(), mul_result.end(),
 	 				    		  denom.begin(), denom.end(), tmp.begin());
 			mul_result.assign(tmp.begin(), tmp_end);
-			std::cout << "  trying " << (div_digit + 1) << " * ";
-			print_digits(denom.rbegin(), denom.rend());
-			std::cout << " = ";
-			print_digits(mul_result.rbegin(), mul_result.rend());
-			std::cout << std::endl;
 		} while (less_than_digits(mul_result.begin(), mul_result.end(),
 								  numer.rbegin(), numer.rend()));
-		std::cout << " Divisor is: " << div_digit << std::endl;
 		
 		result.push_back(div_digit);
 		/* Prev_mul now holds the number to be subtracted from numerator */
 		tmp.resize(distance(numer.begin(), numer.end()), 0);
-		std::cout << "  calculating ";
-		print_digits(numer.begin(), numer.end());
-		std::cout << " - ";
-		print_digits(prev_mul.rbegin(), prev_mul.rend());
-		std::cout << " = ";
 		tmp_end = minus_digits(numer.rbegin(), numer.rend(),
 				   	 		   prev_mul.begin(), prev_mul.end(), tmp.begin());
 		tmp.resize(distance(tmp.begin(), tmp_end));
 		numer.assign(tmp.rbegin(), tmp.rend());
-		print_digits(numer.begin(), numer.end());
-		std::cout << std::endl;
 	}
 	
 	out_it = result.rbegin();
