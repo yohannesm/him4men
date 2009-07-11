@@ -30,28 +30,26 @@ void print_digits(II b, II &e)
 
 
 /**
- *
+ * @note Expects b1 and b2 to point to the MOST significant digit.
  */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 {
 	unsigned int s1_len, s2_len;
-	bool is_less;
 
 	s1_len = distance(b1, e1);
 	s2_len = distance(b2, e2);
 	if (s1_len < s2_len) return true;
 
 	while (b1 != e1) {
-		if (*b1 == *b2) continue;
-		is_less = (*b1 < *b2) ? true : false;
+		if (*b1 > *b2) return false;
 		++b1; ++b2;
 	}
+
+	return true;
 }
 
 
-
-#if 0
 
 template <typename II1, typename II2>
 bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -65,9 +63,10 @@ bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 		if (*b1 != *b2) return false;
 		++b1; ++b2;
 	}
-	return (b2 == e2);
+
+	assert(b2 == e2);
+	return true;
 }
-#endif
 
 // -----------------
 // shift_left_digits
