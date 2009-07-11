@@ -477,7 +477,8 @@ class Integer {
          * Checking whether the lhs object is less than or equal to the rhs object
          */
         friend bool operator <= (const Integer& lhs, const Integer& rhs) {
-            return !(rhs < lhs);}
+            return !(rhs < lhs);
+		}
 
         // ----------
         // operator >
@@ -487,7 +488,8 @@ class Integer {
          * Checking whether the lhs object has bigger Integer value than the rhs object
          */
         friend bool operator > (const Integer& lhs, const Integer& rhs) {
-            return (rhs < lhs);}
+            return (rhs < lhs);
+		}
 
         // -----------
         // operator >=
@@ -497,7 +499,8 @@ class Integer {
          * Checking whether the lhs object has bigger or equal Integer value than the rhs object
          */
         friend bool operator >= (const Integer& lhs, const Integer& rhs) {
-            return !(lhs < rhs);}
+            return !(lhs < rhs);
+		}
 
         // ----------
         // operator +
@@ -507,7 +510,8 @@ class Integer {
          * adding 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator + (Integer lhs, const Integer& rhs) {
-            return lhs += rhs;}
+            return lhs += rhs;
+		}
 
         // ----------
         // operator -
@@ -517,7 +521,8 @@ class Integer {
          * subtracting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator - (Integer lhs, const Integer& rhs) {
-            return lhs -= rhs;}
+            return lhs -= rhs;
+		}
 
         // ----------
         // operator *
@@ -527,7 +532,8 @@ class Integer {
          * multiplying 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator * (Integer lhs, const Integer& rhs) {
-            return lhs *= rhs;}
+            return lhs *= rhs;
+		}
 
         // ----------
         // operator /
@@ -542,7 +548,7 @@ class Integer {
             if((rhs.container.size == 1) && (rhs.container[0] == 0))
             	throw std::invalid_argument("Integer::operator /");
             return lhs /= rhs;
-            }
+        }
 
         // ----------
         // operator %
@@ -553,7 +559,8 @@ class Integer {
          * @throws invalid_argument if (rhs <= 0)
          */
         friend Integer operator % (Integer lhs, const Integer& rhs) {
-            return lhs %= rhs;}
+            return lhs %= rhs;
+		}
 
         // -----------
         // operator <<
@@ -563,7 +570,8 @@ class Integer {
          * left shifting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator << (Integer lhs, int rhs) {
-            return lhs <<= rhs;}
+            return lhs <<= rhs;
+		}
 
         // -----------
         // operator >>
@@ -573,7 +581,8 @@ class Integer {
          * right shifting 2 integer object an outputting a new Integer object for the result
          */
         friend Integer operator >> (Integer lhs, int rhs) {
-            return lhs >>= rhs;}
+            return lhs >>= rhs;
+		}
 
         // -----------
         // operator <<
@@ -596,8 +605,6 @@ class Integer {
     private:
         // data
         // ----
-        // I don't think we need digits, we can just do container.size()
-        //size_t digits; // number of digits
 		bool sign; // true = positive & false = negative 
 		C container;
 
@@ -677,7 +684,7 @@ class Integer {
             }
             if (!valid())
                 throw std::invalid_argument("Integer::Integer(const std::string& value)");
-               }
+        }
         // Default copy, destructor, and copy assignment.
         // are provided by the compiler
         // Integer (const Integer&);
@@ -709,7 +716,8 @@ class Integer {
          */
         Integer& operator ++ () {
             *this += 1;
-            return *this;}
+            return *this;
+		}
 
         /**
          * post-increment operator for Integer object
@@ -719,7 +727,8 @@ class Integer {
         Integer operator ++ (int) {
             Integer x = *this;
             ++(*this);
-            return x;}
+            return x;
+		}
 
         // -----------
         // operator --
@@ -731,7 +740,8 @@ class Integer {
          */
         Integer& operator -- () {
             *this -= 1;
-            return *this;}
+            return *this;
+		}
 
         /**
          * post-decrement operator for Integer object
@@ -741,7 +751,8 @@ class Integer {
         Integer operator -- (int) {
             Integer x = *this;
             --(*this);
-            return x;}
+            return x;
+		}
 
         // -----------
         // operator +=
