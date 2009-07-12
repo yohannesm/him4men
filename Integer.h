@@ -32,6 +32,7 @@ void print_digits(II b, II e)
 /**
  * @note Assumes the iterators are iterating such that bX points at the LEAST
  * significant digit, and eX points just past the MOST significant byte.
+ * @FIXME: No tests
  */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -56,6 +57,7 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 /**
  * @note This function is AGNOSTIC to digit ordering; either LEAST or MOST may
  * be first.
+ * @FIXME: No tests
  */
 template <typename II1, typename II2>
 bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
