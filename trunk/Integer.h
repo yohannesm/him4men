@@ -611,10 +611,12 @@ class Integer {
          * dividing 2 integer object an outputting a new Integer object for the result
          * rhs can't be equal to zero
          * @throws invalid_argument if (rhs == 0)
+         *FIXME: the exception thrown doesn't work somehow
          */
         friend Integer operator / (Integer lhs, const Integer& rhs) {
-            if((rhs.container.size == 1) && (rhs.container[0] == 0))
+            /*if((rhs.container.size == 1) && (rhs.container[0] == 0)){
             	throw std::invalid_argument("Integer::operator /");
+            	}*/
             return lhs /= rhs;
         }
 
