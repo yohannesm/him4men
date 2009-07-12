@@ -679,17 +679,28 @@ struct TestInteger : CppUnit::TestFixture {
     void test_post_inc(){
 		My::Integer<int> a = 3;
 		My::Integer<int> b = -1;
-		My::Integer<int> c = a++;
 		CPPUNIT_ASSERT((a++) == My::Integer<int>(3));
 		CPPUNIT_ASSERT((b++) ==  My::Integer<int>(-1));
-		CPPUNIT_ASSERT((c) ==  My::Integer<int>(4));
 	}
     // ------------------------------
     // Integer::operator -- () // pre
     // ------------------------------
+
+   void test_pre_dec(){
+		My::Integer<int> a = 3;
+		My::Integer<int> b = 0;
+		CPPUNIT_ASSERT((--a) == My::Integer<int>(2));
+		CPPUNIT_ASSERT((--b) ==  My::Integer<int>(-1));
+	}
     // ------------------------------
     // Integer::operator -- (int) // post
     // ------------------------------
+    void test_post_dec(){
+		My::Integer<int> a = 3;
+		My::Integer<int> b = -1;
+		CPPUNIT_ASSERT((a--) == My::Integer<int>(3));
+		CPPUNIT_ASSERT((b--) ==  My::Integer<int>(-1));
+	}
     // ------------------------------
     // Integer::operator += (const Integer)
     // ------------------------------
@@ -792,6 +803,8 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_negation2);
 	CPPUNIT_TEST(test_pre_inc);
 	CPPUNIT_TEST(test_post_inc);
+	CPPUNIT_TEST(test_pre_dec);
+	CPPUNIT_TEST(test_post_dec);
 	CPPUNIT_TEST(test_plus_equal);
     CPPUNIT_TEST_SUITE_END();};
 
