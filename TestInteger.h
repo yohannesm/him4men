@@ -151,8 +151,6 @@ struct TestInteger : CppUnit::TestFixture {
         My::Integer<int> b = 10;
         My::Integer<int> c = 3;
 		My::Integer<int> r = (a % b);
-		std::cout << std::endl;
-		std::cout << a << " % " << b << " = " << r << std::endl;
         CPPUNIT_ASSERT((a % b) == c);
         CPPUNIT_ASSERT(r == c);
 	}
