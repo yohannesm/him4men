@@ -1,10 +1,10 @@
 VALGRIND ?= valgrind
 DOXYGEN ?= doxygen
 CC = g++
-EXTRA_CPPFLAGS += -g -ggdb -ansi -pedantic -Wall -O2
+EXTRA_CPPFLAGS += -g -ggdb -ansi -pedantic -Wall -O3
 #EXTRA_CPPFLAGS += -ansi -pedantic -Wall -O2 
 TEST_LDFLAGS = -lcppunit -ldl
-TEST_CPPFLAGS = -DTEST
+#TEST_CPPFLAGS = -DTEST
 EXECUTABLE = main.app
 DOXYFILE = Doxyfile
 
