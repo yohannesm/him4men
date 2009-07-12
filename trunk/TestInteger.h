@@ -615,9 +615,12 @@ struct TestInteger : CppUnit::TestFixture {
 		const My::Integer<int> b = 50;
 		const My::Integer<int> c = -11;
 		const My::Integer<int> d = 40;
+		const My::Integer<int> e = 999;
+		const My::Integer<int> f = 998001;
 		CPPUNIT_ASSERT((a*b) == My::Integer<int>(50));
 		CPPUNIT_ASSERT((b*c) == My::Integer<int>(-550));
 		CPPUNIT_ASSERT((b*d) == My::Integer<int>(2000));
+		CPPUNIT_ASSERT((e*e) == My::Integer<int>(998001));
 	}
     // ------------------------------
     // operator / (Integer, Integer)
