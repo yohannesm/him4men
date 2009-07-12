@@ -1008,7 +1008,7 @@ class Integer {
          */
         Integer pow (int e) const {
 			if (e == 0) {
-				if (this == 0) {
+				if (*this == 0) {
                 	throw std::invalid_argument("Integer::pow(int e): 0^0");
 				}
 				return Integer(1);
