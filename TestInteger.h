@@ -151,6 +151,8 @@ struct TestInteger : CppUnit::TestFixture {
         My::Integer<int> b = 10;
         My::Integer<int> c = 3;
 		My::Integer<int> r = (a % b);
+		std::cout << std::endl;
+		std::cout << a << " % " << b << " = " << r << std::endl;
         CPPUNIT_ASSERT((a % b) == c);
         CPPUNIT_ASSERT(r == c);
 	}
@@ -249,6 +251,14 @@ struct TestInteger : CppUnit::TestFixture {
         My::Integer<int> a = 2;
         My::Integer<int> b = 5;
         My::Integer<int> c = -3;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+	
+    void test_minus_int_8 () {
+        My::Integer<int> a = 123;
+        My::Integer<int> b = 120;
+        My::Integer<int> c = 3;
 		My::Integer<int> r = (a - b);
         CPPUNIT_ASSERT((a - b) == c);
 	}	
@@ -570,7 +580,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_pow_neg_3);
     CPPUNIT_TEST(test_pow2);
     CPPUNIT_TEST(test_divides_int);
-    //CPPUNIT_TEST(test_modulo_int);
+    CPPUNIT_TEST(test_modulo_int);
     CPPUNIT_TEST(test_plus_int);
     CPPUNIT_TEST(test_plus_int_1);
     CPPUNIT_TEST(test_plus_int_2);
@@ -586,6 +596,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_minus_int_5);
     CPPUNIT_TEST(test_minus_int_6);
     CPPUNIT_TEST(test_minus_int_7);
+    CPPUNIT_TEST(test_minus_int_8);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h

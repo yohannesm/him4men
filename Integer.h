@@ -301,6 +301,13 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 	unsigned int zeroes = 0;
 	bool all_zeroes = true;
 
+
+	std::cout << "minus_digits (reversed): ";
+	print_digits(b1, e1);
+	std::cout << " - ";
+	print_digits(b2, e2);
+	std::cout << std::endl;
+
 	while (b1 != e1) {
 		borrow = subtract_next_column(b1, e1, b2, e2, x, borrow, zeroes);
 		if (all_zeroes && (zeroes == 0)) all_zeroes = false;
@@ -530,7 +537,12 @@ class Integer {
 			typename C::const_iterator rhs_it = rhs.container.end();
 			while (lhs_it != lhs.container.begin()) {
 				--lhs_it; --rhs_it;
-				if (*lhs_it >= *rhs_it) return (!lhs.sign);
+				if (*lhs_it > *rhs_it) {
+					std::cout << *lhs_it << " > " << *rhs_it << std::endl;
+					return (!lhs.sign);
+				} else {
+					std::cout << *lhs_it << " <= " << *rhs_it << std::endl;
+				}
 			}
            	return (lhs.sign);
         }
@@ -852,12 +864,14 @@ class Integer {
 				C copy = this->container;
 				typename C::iterator end;
 				if (this->abs() > rhs.abs()) {
+						std::cout << this->abs() << " > " << rhs.abs() << std::endl;
 						end = minus_digits(copy.begin(),
 									 	   copy.end(),
 									 	   rhs.container.begin(),
 									 	   rhs.container.end(),
 									 	   this->container.begin());
 				} else {
+						std::cout << this->abs() << " <= " << rhs.abs() << std::endl;
 						end = minus_digits(rhs.container.begin(),
 									 	   rhs.container.end(),
 									 	   copy.begin(),
@@ -896,12 +910,14 @@ class Integer {
          * the operation will return the modified object * value of rhs Integer
          */
         Integer& operator *= (const Integer& rhs) {
+			typename C::iterator copy_end;
 			C copy = this->container;
 			this->sign = (this->sign == rhs.sign);
-			multiplies_digits(this->container.begin(), this->container.end(),
-						      rhs.container.begin(), rhs.container.end(),
-						      copy.begin());
-			std::swap(this->container, copy);
+			copy_end = multiplies_digits(this->container.begin(),
+										 this->container.end(),
+						      			 rhs.container.begin(),
+										 rhs.container.end(), copy.begin());
+			this->container.assign(copy.begin(), copy_end);
 			return *this;
 		}
 
@@ -942,7 +958,16 @@ class Integer {
          * @throws invalid_argument if (rhs <= 0)
          */
         Integer& operator %= (const Integer& rhs) {
-			//return (*this - ((*this / rhs) * rhs));
+			Integer copy = *this;
+
+			std::cout << "*this / rhs = " << (*this / rhs) << std::endl;
+			std::cout << "(*this / rhs) * rhs = " << ((*this / rhs) * rhs) << std::endl;
+			std::cout << "*this = " << *this << std::endl;
+			std::cout << "*this - (*this / rhs) * rhs = " << *this - ((*this / rhs) * rhs) << std::endl;
+			copy = *this - ((*this / rhs) * rhs);
+
+			this->container = copy.container;
+			this->sign = copy.sign;
 			return *this;
 		}
 
