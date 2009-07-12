@@ -712,12 +712,19 @@ class Integer {
 			} else {
 				sign = true;
 			}
+
 			//storing the least significant digit at index 0 and then 
 			//continue on storing it backward
 			while (value > 0) {
 				container.push_back(value % 10);
 				value = value / 10;
 			}
+			
+			// Handle the 0 special case
+			if (container.size() == 0) {
+				container.push_back(0);
+			}
+
             assert(valid());
 		}
 
@@ -1000,8 +1007,33 @@ class Integer {
          * @throws invalid_argument if (e < 0)
          */
         Integer pow (int e) const {
-            // <your code>
-            return Integer(0);
+			if (e == 0) {
+				if (this == 0) {
+                	throw std::invalid_argument("Integer::pow(int e): 0^0");
+				}
+				return Integer(1);
+			}
+
+			Integer copy = *this;
+			C tmp;
+			typename C::iterator tmp_end;
+			for (int i = 1; i < e; i++) {
+				tmp.resize(copy.container.size() + 1, 0);
+				tmp_end = multiplies_digits(copy.container.begin(),
+										    copy.container.end(),
+										    this->container.begin(),
+										    this->container.end(),
+										    tmp.begin());
+				copy.container.assign(tmp.begin(), tmp_end);
+				tmp.clear();
+			}
+			if ((copy.sign == false) && ((e % 2) == 0)) {
+				copy.sign = true;
+			} else {
+				copy.sign = this->sign;
+			}
+	
+            return copy;
 		}
 	};
 
