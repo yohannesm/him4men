@@ -801,11 +801,6 @@ struct TestInteger : CppUnit::TestFixture {
 	}
     // ------------------------------
 	
-    void mersenne20(){
-		My::Integer<int> a = 2;
-		My::Integer<int> b = a.pow(4423) - 1;
-		std::cout << "b : " << b << std::endl;
-	}
     // -----
     // suite
     // -----
@@ -884,7 +879,6 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_modulo_equal);
 	CPPUNIT_TEST(test_leftshift_equal);
 	CPPUNIT_TEST(test_rightshift_equal);
-	CPPUNIT_TEST(mersenne20);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
