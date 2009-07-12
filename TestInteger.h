@@ -285,6 +285,17 @@ struct TestInteger : CppUnit::TestFixture {
 		}
 	}
 
+    void test_pow2 () {
+        try {
+            const My::Integer<int> x = 	   8;
+            const int              e =     2;
+            const My::Integer<int> y = x.pow(e);
+			CPPUNIT_ASSERT(y ==    64);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);
+		}
+	}
+
     void test_pow00() {
         try {
             const My::Integer<int> x = 0;
@@ -385,6 +396,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_pow0);
     CPPUNIT_TEST(test_pow00);
     CPPUNIT_TEST(test_pow_neg);
+    CPPUNIT_TEST(test_pow2);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
