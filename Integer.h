@@ -850,6 +850,8 @@ class Integer {
 				if (this->abs() == rhs.abs()) {
 					container.clear();
 					container.push_back(0);
+					sign = true;
+					return *this;
 				}
 
 				// Four cases - first, they need to be submitted to minus with

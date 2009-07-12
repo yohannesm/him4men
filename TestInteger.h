@@ -666,9 +666,24 @@ struct TestInteger : CppUnit::TestFixture {
     // ------------------------------
     // Integer::operator ++ () // pre
     // ------------------------------
+
+   void test_pre_inc(){
+		My::Integer<int> a = 3;
+		My::Integer<int> b = -1;
+		CPPUNIT_ASSERT((++a) == My::Integer<int>(4));
+		CPPUNIT_ASSERT((++b) ==  My::Integer<int>(0));
+	}
     // ------------------------------
     // Integer::operator ++ (int) // post
     // ------------------------------
+    void test_post_inc(){
+		My::Integer<int> a = 3;
+		My::Integer<int> b = -1;
+		My::Integer<int> c = a++;
+		CPPUNIT_ASSERT((a++) == My::Integer<int>(3));
+		CPPUNIT_ASSERT((b++) ==  My::Integer<int>(-1));
+		CPPUNIT_ASSERT((c) ==  My::Integer<int>(4));
+	}
     // ------------------------------
     // Integer::operator -- () // pre
     // ------------------------------
@@ -678,6 +693,17 @@ struct TestInteger : CppUnit::TestFixture {
     // ------------------------------
     // Integer::operator += (const Integer)
     // ------------------------------
+
+    void test_plus_equal(){
+		My::Integer<int> a = 12;
+		My::Integer<int> b = 0;
+		const My::Integer<int> c = 1;
+		const My::Integer<int> d = 13;
+		My::Integer<int> e = -1;
+		CPPUNIT_ASSERT((a += c) == d);
+		CPPUNIT_ASSERT((b += b) == b);
+		CPPUNIT_ASSERT((e += c) == b);
+	}
     // ------------------------------
     // Integer::operator -= (const Integer)
     // ------------------------------
@@ -764,7 +790,9 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_left_shift);
     CPPUNIT_TEST(test_right_shift);
 	CPPUNIT_TEST(test_negation2);
-
+	CPPUNIT_TEST(test_pre_inc);
+	CPPUNIT_TEST(test_post_inc);
+	CPPUNIT_TEST(test_plus_equal);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
