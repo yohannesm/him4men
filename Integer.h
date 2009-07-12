@@ -906,6 +906,12 @@ class Integer {
          * the operation will return the modified object * value of rhs Integer
          */
         Integer& operator *= (const Integer& rhs) {
+			if(*this==0 || rhs==0){
+				this->container.clear();
+				this->container.push_back(0);
+				this->sign = true;
+				return *this;
+				}
 			typename C::iterator copy_end;
 			C copy;
 			copy.resize(this->container.size() + rhs.container.size() + 1);
