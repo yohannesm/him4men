@@ -588,12 +588,37 @@ struct TestInteger : CppUnit::TestFixture {
     // ------------------------------
     // operator > (Integer, Integer)
     // ------------------------------
+    void test_greater_than () {
+		const My::Integer<int> a = 9;
+		const My::Integer<int> b = 10;
+		const My::Integer<int> c = -10;
+		CPPUNIT_ASSERT(b > a);
+		CPPUNIT_ASSERT(b > c);
+	}
     // ------------------------------
     // operator >= (Integer, Integer)
     // ------------------------------
+    void test_greater_than_equal () {
+		const My::Integer<int> a = 9;
+		const My::Integer<int> b = 10;
+		const My::Integer<int> c = -10;
+		const My::Integer<int> d = -10;
+		CPPUNIT_ASSERT(b >= a);
+		CPPUNIT_ASSERT(b >= c);
+		CPPUNIT_ASSERT(d >= c);
+	}
     // ------------------------------
     // operator * (Integer, Integer)
     // ------------------------------
+    void test_multiply () {
+		const My::Integer<int> a = 1;
+		const My::Integer<int> b = 50;
+		const My::Integer<int> c = -11;
+		const My::Integer<int> d = 40;
+		CPPUNIT_ASSERT((a*b) == My::Integer<int>(50));
+		CPPUNIT_ASSERT((b*c) == My::Integer<int>(-550));
+		CPPUNIT_ASSERT((b*d) == My::Integer<int>(2000));
+	}
     // ------------------------------
     // operator / (Integer, Integer)
     // ------------------------------
@@ -707,6 +732,9 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_not_equal);
     CPPUNIT_TEST(test_less_than);
     CPPUNIT_TEST(test_less_than_equal);
+    CPPUNIT_TEST(test_greater_than);
+    CPPUNIT_TEST(test_greater_than_equal);
+	CPPUNIT_TEST(test_multiply);
 
     CPPUNIT_TEST_SUITE_END();};
 
