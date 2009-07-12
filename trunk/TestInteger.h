@@ -718,9 +718,30 @@ struct TestInteger : CppUnit::TestFixture {
     // ------------------------------
     // Integer::operator -= (const Integer)
     // ------------------------------
+    void test_minus_equal(){
+		My::Integer<int> a = 12;
+		My::Integer<int> b = 0;
+		const My::Integer<int> c = 1;
+		const My::Integer<int> d = 11;
+		My::Integer<int> e = 1;
+		CPPUNIT_ASSERT((a -= c) == d);
+		CPPUNIT_ASSERT((b -= b) == b);
+		CPPUNIT_ASSERT((e -= c) == b);
+	}
     // ------------------------------
     // Integer::operator *= (const Integer)
     // ------------------------------
+    void test_multip_equal(){
+		My::Integer<int> a = 12;
+		My::Integer<int> b = 0;
+		const My::Integer<int> c = 1;
+		const My::Integer<int> d = 11;
+		My::Integer<int> e = -1;
+		CPPUNIT_ASSERT((b *= a) == b);
+		CPPUNIT_ASSERT((a *= b) == b);
+		CPPUNIT_ASSERT((b *= b) == b);
+		CPPUNIT_ASSERT((e *= c) == e);
+	}
     // ------------------------------
     // Integer::operator /= (const Integer)
     // ------------------------------
@@ -806,6 +827,8 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_pre_dec);
 	CPPUNIT_TEST(test_post_dec);
 	CPPUNIT_TEST(test_plus_equal);
+	CPPUNIT_TEST(test_minus_equal);
+	CPPUNIT_TEST(test_multip_equal);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
