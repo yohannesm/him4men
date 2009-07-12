@@ -124,6 +124,10 @@ OI shift_left_digits (II b, II e, int n, OI x) {
  */
 template <typename II, typename OI>
 OI shift_right_digits (II b, II e, int n, OI x) {
+	if (n < 0) {
+		throw std::invalid_argument("Integer::operator <<=: n < 0");
+	}
+
 	// First, allow the original iterator to proceed along, not copying anything
 	// to the destination until we get n elements into the container
 	if (std::distance(b, e) <= n) {
@@ -972,14 +976,16 @@ class Integer {
 				throw std::invalid_argument("Integer::operator <<=: n < 0");
 			}
 
-			len = this->container.size();
-			this->container.resize(len + n);
-			for (i = (len - 1); i >= 0; i--) {
-				this->container[i + n] = this->container[i];
-			}
+			if (*this != 0) {
+				len = this->container.size();
+				this->container.resize(len + n);
+				for (i = (len - 1); i >= 0; i--) {
+					this->container[i + n] = this->container[i];
+				}
 
-			for (i = 0; i < n; i++) {
-				this->container[i] = 0;
+				for (i = 0; i < n; i++) {
+					this->container[i] = 0;
+				}
 			}
 
             return *this;
@@ -1000,12 +1006,12 @@ class Integer {
 				throw std::invalid_argument("Integer::operator <<=: n < 0");
 			}
 
-			if (n >= this->container.size()) {
+			if ((unsigned int)n >= this->container.size()) {
 				this->container.clear();
 				this->container.push_back(0);
 			} else {
 				it = this->container.begin();
-				it.advance(n);
+				std::advance(it, n);
 				this->container.erase(this->container.begin(), it);
 			}
 

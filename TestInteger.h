@@ -623,17 +623,37 @@ struct TestInteger : CppUnit::TestFixture {
 		CPPUNIT_ASSERT((e*e) == My::Integer<int>(998001));
 	}
     // ------------------------------
-    // operator / (Integer, Integer)
-    // ------------------------------
-    // ------------------------------
-    // operator % (Integer, Integer)
-    // ------------------------------
-    // ------------------------------
     // operator << (Integer, int)
     // ------------------------------
+    void test_left_shift () {
+		const My::Integer<int> a = 101;
+		const My::Integer<int> b = 0;
+		CPPUNIT_ASSERT((a << 0) == a);
+		CPPUNIT_ASSERT((a << 1) == My::Integer<int>(1010));
+		CPPUNIT_ASSERT((a << 2) == My::Integer<int>(10100));
+		CPPUNIT_ASSERT((b << 3) == My::Integer<int>(0));
+	}
     // ------------------------------
     // operator >> (Integer, int)
     // ------------------------------
+    void test_right_shift () {
+		const My::Integer<int> a = 20101;
+		const My::Integer<int> b = 0;
+		CPPUNIT_ASSERT((a >> 0) == a);
+		CPPUNIT_ASSERT((a >> 1) == My::Integer<int>(2010));
+		CPPUNIT_ASSERT((a >> 2) == My::Integer<int>(201));
+		CPPUNIT_ASSERT((a >> 4) == My::Integer<int>(2));
+		CPPUNIT_ASSERT((a >> 5) == My::Integer<int>(0));
+		CPPUNIT_ASSERT((a >> 20) == My::Integer<int>(0));
+		CPPUNIT_ASSERT((b >> 3) == My::Integer<int>(0));
+		CPPUNIT_ASSERT((b << 3) == My::Integer<int>(0));
+		try {
+			CPPUNIT_ASSERT((a >> -2) == My::Integer<int>(2010100));
+			CPPUNIT_ASSERT(false);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(true);
+		}
+	}
     // ------------------------------
     // std::ostream& operator << (std::ostream &, Integer)
     // ------------------------------
@@ -738,6 +758,8 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_less_than_equal);
     CPPUNIT_TEST(test_greater_than);
     CPPUNIT_TEST(test_greater_than_equal);
+    CPPUNIT_TEST(test_left_shift);
+    CPPUNIT_TEST(test_right_shift);
 
     CPPUNIT_TEST_SUITE_END();};
 
