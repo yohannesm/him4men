@@ -713,8 +713,6 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_pow_neg_2);
     CPPUNIT_TEST(test_pow_neg_3);
     CPPUNIT_TEST(test_pow2);
-    CPPUNIT_TEST(test_divides_int);
-    CPPUNIT_TEST(test_modulo_int);
     CPPUNIT_TEST(test_plus_int);
     CPPUNIT_TEST(test_plus_int_1);
     CPPUNIT_TEST(test_plus_int_2);
@@ -731,13 +729,15 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_minus_int_6);
     CPPUNIT_TEST(test_minus_int_7);
     CPPUNIT_TEST(test_minus_int_8);
+	CPPUNIT_TEST(test_multiply);
+    CPPUNIT_TEST(test_divides_int);
+    CPPUNIT_TEST(test_modulo_int);
     CPPUNIT_TEST(test_equal_equal);
     CPPUNIT_TEST(test_not_equal);
     CPPUNIT_TEST(test_less_than);
     CPPUNIT_TEST(test_less_than_equal);
     CPPUNIT_TEST(test_greater_than);
     CPPUNIT_TEST(test_greater_than_equal);
-	CPPUNIT_TEST(test_multiply);
 
     CPPUNIT_TEST_SUITE_END();};
 

@@ -967,6 +967,11 @@ class Integer {
          */
         Integer& operator <<= (int n) {
             int i, len;
+
+			if (n < 0) {
+				throw std::invalid_argument("Integer::operator <<=: n < 0");
+			}
+
 			len = this->container.size();
 			this->container.resize(len + n);
 			for (i = (len - 1); i >= 0; i--) {
@@ -991,9 +996,19 @@ class Integer {
         Integer& operator >>= (int n) {
 			typename C::iterator it;
 
-			it = this->container.begin();
-			it.advance(n);
-			this->container.erase(this->container.begin(), it);
+			if (n < 0) {
+				throw std::invalid_argument("Integer::operator <<=: n < 0");
+			}
+
+			if (n >= this->container.size()) {
+				this->container.clear();
+				this->container.push_back(0);
+			} else {
+				it = this->container.begin();
+				it.advance(n);
+				this->container.erase(this->container.begin(), it);
+			}
+
             return *this;
 		}
 
