@@ -1007,6 +1007,10 @@ class Integer {
          * @throws invalid_argument if (e < 0)
          */
         Integer pow (int e) const {
+			if (e < 0) {
+                	throw std::invalid_argument("Integer::pow(int e): e < 0");
+			}
+			
 			if (e == 0) {
 				if (*this == 0) {
                 	throw std::invalid_argument("Integer::pow(int e): 0^0");
