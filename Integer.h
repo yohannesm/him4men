@@ -783,6 +783,7 @@ class Integer {
          */
         Integer operator - () const {
 			Integer copy = *this;
+			if(*this != 0)
 			copy.sign = (!copy.sign);
 			
             return copy;
