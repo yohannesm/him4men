@@ -938,6 +938,9 @@ class Integer {
             if(rhs == 0) {
             	throw std::invalid_argument("Integer::operator /: div by 0");
             }
+			if(*this==0){
+				return *this;
+				}
 
 			C copy = this->container;
 			this->sign = (this->sign == rhs.sign);
@@ -962,9 +965,18 @@ class Integer {
          */
         Integer& operator %= (const Integer& rhs) {
 			Integer copy = *this;
+            if(rhs <= 0) {
+            	throw std::invalid_argument("Integer::operator /: div by 0");
+            }
+			if(*this==0){
+				return *this;
+				}
+
 
 			copy = *this - ((*this / rhs) * rhs);
-
+			copy.sign = true;
+			if(!this->sign)
+				copy = rhs - copy;
 			this->container = copy.container;
 			this->sign = copy.sign;
 			return *this;

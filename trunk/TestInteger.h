@@ -745,9 +745,38 @@ struct TestInteger : CppUnit::TestFixture {
     // ------------------------------
     // Integer::operator /= (const Integer)
     // ------------------------------
+    void test_divide_equal(){
+		My::Integer<int> a = 12;
+		My::Integer<int> b = 0;
+		const My::Integer<int> c = 1;
+		My::Integer<int> d = 11;
+		My::Integer<int> e = -1;
+		CPPUNIT_ASSERT((b /= a) == b);
+		CPPUNIT_ASSERT((d /= c) == d);
+		CPPUNIT_ASSERT((a /= d) == c);
+	try{
+		CPPUNIT_ASSERT((a /= b) == b);
+		CPPUNIT_ASSERT(false);
+	}
+	catch (std::invalid_argument& e){
+            CPPUNIT_ASSERT(true);
+	}
+
+	}
     // ------------------------------
     // Integer::operator %= (const Integer)
     // ------------------------------
+    void test_modulo_equal(){
+		My::Integer<int> a = 123;
+		My::Integer<int> b = 10;
+		const My::Integer<int> c = 3;
+		My::Integer<int> d = -10;
+		My::Integer<int> e = 1;
+		CPPUNIT_ASSERT((a %= b) == 3);
+		CPPUNIT_ASSERT((b %= c) == e);
+		
+		CPPUNIT_ASSERT((d %= c) == 2);
+	}
     // ------------------------------
     // Integer::operator <<= (int)
     // ------------------------------
@@ -829,6 +858,8 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_plus_equal);
 	CPPUNIT_TEST(test_minus_equal);
 	CPPUNIT_TEST(test_multip_equal);
+	CPPUNIT_TEST(test_divide_equal);
+	CPPUNIT_TEST(test_modulo_equal);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
