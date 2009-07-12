@@ -538,6 +538,114 @@ struct TestInteger : CppUnit::TestFixture {
 		CPPUNIT_ASSERT(std::equal(const_cast<const int *>(x), p3, a));
 	}
 
+	
+    // ------------------------------
+    // operator == (Integer, Integer)
+    // ------------------------------
+    void test_equal_equal () {
+		const My::Integer<int> a = 1;
+		const My::Integer<int> b = 1;
+		const My::Integer<int> c = 11;
+		const My::Integer<int> d = 11;
+		CPPUNIT_ASSERT(a == b);
+		CPPUNIT_ASSERT(c == d);
+	}
+    // ------------------------------
+    // operator != (Integer, Integer)
+    // ------------------------------
+    void test_not_equal () {
+		const My::Integer<int> a = 1;
+		const My::Integer<int> b = -1;
+		const My::Integer<int> c = 11;
+		const My::Integer<int> d = 110;
+		CPPUNIT_ASSERT(a != b);
+		CPPUNIT_ASSERT(c != d);
+	}
+    // ------------------------------
+    // operator < (Integer, Integer)
+    // ------------------------------
+    void test_less_than () {
+		const My::Integer<int> a = 9;
+		const My::Integer<int> b = 10;
+		const My::Integer<int> c = -10;
+		const My::Integer<int> d = -9;
+		CPPUNIT_ASSERT(a < b);
+		CPPUNIT_ASSERT(c < a);
+		CPPUNIT_ASSERT(c < d);
+	}
+    // ------------------------------
+    // operator <= (Integer, Integer)
+    // ------------------------------
+    void test_less_than_equal () {
+		const My::Integer<int> a = 9;
+		const My::Integer<int> b = 10;
+		const My::Integer<int> c = -10;
+		const My::Integer<int> d = -10;
+		CPPUNIT_ASSERT(a <= b);
+		CPPUNIT_ASSERT(c <= b);
+		CPPUNIT_ASSERT(c <= d);
+	}
+    // ------------------------------
+    // operator > (Integer, Integer)
+    // ------------------------------
+    // ------------------------------
+    // operator >= (Integer, Integer)
+    // ------------------------------
+    // ------------------------------
+    // operator * (Integer, Integer)
+    // ------------------------------
+    // ------------------------------
+    // operator / (Integer, Integer)
+    // ------------------------------
+    // ------------------------------
+    // operator % (Integer, Integer)
+    // ------------------------------
+    // ------------------------------
+    // operator << (Integer, int)
+    // ------------------------------
+    // ------------------------------
+    // operator >> (Integer, int)
+    // ------------------------------
+    // ------------------------------
+    // std::ostream& operator << (std::ostream &, Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator - ()
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator ++ () // pre
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator ++ (int) // post
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator -- () // pre
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator -- (int) // post
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator += (const Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator -= (const Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator *= (const Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator /= (const Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator %= (const Integer)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator <<= (int)
+    // ------------------------------
+    // ------------------------------
+    // Integer::operator >>= (int)
+    // ------------------------------
+
     // -----
     // suite
     // -----
@@ -595,6 +703,11 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_minus_int_6);
     CPPUNIT_TEST(test_minus_int_7);
     CPPUNIT_TEST(test_minus_int_8);
+    CPPUNIT_TEST(test_equal_equal);
+    CPPUNIT_TEST(test_not_equal);
+    CPPUNIT_TEST(test_less_than);
+    CPPUNIT_TEST(test_less_than_equal);
+
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
