@@ -302,12 +302,6 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 	bool all_zeroes = true;
 
 
-	std::cout << "minus_digits (reversed): ";
-	print_digits(b1, e1);
-	std::cout << " - ";
-	print_digits(b2, e2);
-	std::cout << std::endl;
-
 	while (b1 != e1) {
 		borrow = subtract_next_column(b1, e1, b2, e2, x, borrow, zeroes);
 		if (all_zeroes && (zeroes == 0)) all_zeroes = false;
@@ -537,12 +531,7 @@ class Integer {
 			typename C::const_iterator rhs_it = rhs.container.end();
 			while (lhs_it != lhs.container.begin()) {
 				--lhs_it; --rhs_it;
-				if (*lhs_it > *rhs_it) {
-					std::cout << *lhs_it << " > " << *rhs_it << std::endl;
-					return (!lhs.sign);
-				} else {
-					std::cout << *lhs_it << " <= " << *rhs_it << std::endl;
-				}
+				if (*lhs_it > *rhs_it) return (!lhs.sign);
 			}
            	return (lhs.sign);
         }
@@ -864,14 +853,12 @@ class Integer {
 				C copy = this->container;
 				typename C::iterator end;
 				if (this->abs() > rhs.abs()) {
-						std::cout << this->abs() << " > " << rhs.abs() << std::endl;
 						end = minus_digits(copy.begin(),
 									 	   copy.end(),
 									 	   rhs.container.begin(),
 									 	   rhs.container.end(),
 									 	   this->container.begin());
 				} else {
-						std::cout << this->abs() << " <= " << rhs.abs() << std::endl;
 						end = minus_digits(rhs.container.begin(),
 									 	   rhs.container.end(),
 									 	   copy.begin(),
@@ -960,10 +947,6 @@ class Integer {
         Integer& operator %= (const Integer& rhs) {
 			Integer copy = *this;
 
-			std::cout << "*this / rhs = " << (*this / rhs) << std::endl;
-			std::cout << "(*this / rhs) * rhs = " << ((*this / rhs) * rhs) << std::endl;
-			std::cout << "*this = " << *this << std::endl;
-			std::cout << "*this - (*this / rhs) * rhs = " << *this - ((*this / rhs) * rhs) << std::endl;
 			copy = *this - ((*this / rhs) * rhs);
 
 			this->container = copy.container;
