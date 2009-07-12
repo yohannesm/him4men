@@ -655,11 +655,14 @@ struct TestInteger : CppUnit::TestFixture {
 		}
 	}
     // ------------------------------
-    // std::ostream& operator << (std::ostream &, Integer)
-    // ------------------------------
-    // ------------------------------
     // Integer::operator - ()
     // ------------------------------
+    void test_negation2(){
+		const My::Integer<int> a = 201;
+		const My::Integer<int> b = 0;
+		CPPUNIT_ASSERT((-a) == -201);
+		CPPUNIT_ASSERT((-b) == 0);
+	}
     // ------------------------------
     // Integer::operator ++ () // pre
     // ------------------------------
@@ -760,6 +763,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_greater_than_equal);
     CPPUNIT_TEST(test_left_shift);
     CPPUNIT_TEST(test_right_shift);
+	CPPUNIT_TEST(test_negation2);
 
     CPPUNIT_TEST_SUITE_END();};
 
