@@ -526,15 +526,13 @@ class Integer {
             if (lhs.container.size() < rhs.container.size()) return (lhs.sign);
 			if (lhs.container.size() > rhs.container.size()) return (!lhs.sign);
 			// Same size, same sign - compare all digits until difference
-            if(lhs.container.size() == rhs.container.size()) {
-				typename C::const_iterator lhs_it = lhs.container.end();
-				typename C::const_iterator rhs_it = rhs.container.end();
-				while (lhs_it != lhs.container.begin()) {
-					--lhs_it; --rhs_it;
-					if (*lhs_it >= *rhs_it) return (!lhs.sign);
-				}
-            	return (lhs.sign);
-            }
+			typename C::const_iterator lhs_it = lhs.container.end();
+			typename C::const_iterator rhs_it = rhs.container.end();
+			while (lhs_it != lhs.container.begin()) {
+				--lhs_it; --rhs_it;
+				if (*lhs_it >= *rhs_it) return (!lhs.sign);
+			}
+           	return (lhs.sign);
         }
 
         // -----------
@@ -840,7 +838,7 @@ class Integer {
          * the operation will return the modified object + value of rhs Integer
          */
         Integer& operator += (const Integer& rhs) {
-			if (this->sign ^ rhs.sign) {
+			if (this->sign != rhs.sign) {
 				if (this->abs() == rhs.abs()) {
 					container.clear();
 					container.push_back(0);
@@ -851,9 +849,9 @@ class Integer {
 				// we reverse the sign.
 				// Ex: 9 - 18 = -(18 - 9)
 				// FIXME: Maybe use swap here instead
-				C copy = *this->container;
+				C copy = this->container;
 				typename C::iterator end;
-				if (this >= rhs) {
+				if (this->abs() > rhs.abs()) {
 						end = minus_digits(copy.begin(),
 									 	   copy.end(),
 									 	   rhs.container.begin(),
@@ -868,10 +866,11 @@ class Integer {
 						this->sign = !this->sign;
 				}
 				this->container.resize(distance(this->container.begin(), end));
+			} else {
+				plus_digits(this->container.begin(), this->container.end(),
+							rhs.container.begin(), rhs.container.end(),
+							this->container.begin());
 			}
-			plus_digits(this->container.begin(), this->container.end(),
-						rhs.container.begin(), rhs.container.end(),
-						this->container.begin());
             return *this;
 		}
 
@@ -884,9 +883,9 @@ class Integer {
          * the operation will return the modified object - value of rhs Integer
          */
         Integer& operator -= (const Integer& rhs) {
-
-            return *this;
+			return ((*this) += -(rhs));
 		}
+		
 
         // -----------
         // operator *=
@@ -898,7 +897,7 @@ class Integer {
          */
         Integer& operator *= (const Integer& rhs) {
 			C copy = this->container;
-			this->sign = (this->sign ^ rhs.sign);
+			this->sign = (this->sign == rhs.sign);
 			multiplies_digits(this->container.begin(), this->container.end(),
 						      rhs.container.begin(), rhs.container.end(),
 						      copy.begin());
@@ -916,12 +915,20 @@ class Integer {
          * @throws invalid_argument if (rhs == 0)
          */
         Integer& operator /= (const Integer& rhs) {
+			typename C::iterator copy_end;
+            if(rhs == 0) {
+            	throw std::invalid_argument("Integer::operator /: div by 0");
+            }
+
 			C copy = this->container;
-			this->sign = (this->sign ^ rhs.sign);
-			divides_digits(this->container.begin(), this->container.end(),
-						    rhs.container.begin(), rhs.container.end(),
-						    copy.begin());
-			std::swap(this->container, copy);
+			this->sign = (this->sign == rhs.sign);
+			copy_end = divides_digits(this->container.begin(),
+									  this->container.end(),
+						    		  rhs.container.begin(),
+									  rhs.container.end(),
+						    		  copy.begin());
+			
+			this->container.assign(copy.begin(), copy_end);
             return *this;
 		}
 
@@ -935,9 +942,8 @@ class Integer {
          * @throws invalid_argument if (rhs <= 0)
          */
         Integer& operator %= (const Integer& rhs) {
-			// this - ((this / rhs) * rhs)
-            // <your code>
-            return *this;
+			//return (*this - ((*this / rhs) * rhs));
+			return *this;
 		}
 
         // ------------
