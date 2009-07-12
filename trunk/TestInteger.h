@@ -774,16 +774,38 @@ struct TestInteger : CppUnit::TestFixture {
 		My::Integer<int> e = 1;
 		CPPUNIT_ASSERT((a %= b) == 3);
 		CPPUNIT_ASSERT((b %= c) == e);
-		
 		CPPUNIT_ASSERT((d %= c) == 2);
 	}
     // ------------------------------
     // Integer::operator <<= (int)
     // ------------------------------
     // ------------------------------
+    void test_leftshift_equal(){
+		My::Integer<int> a = 123;
+		My::Integer<int> d = -10;
+		My::Integer<int> e = 1;
+		CPPUNIT_ASSERT((a <<= 2) == 12300);
+		CPPUNIT_ASSERT((d <<= 3) == -10000);
+		CPPUNIT_ASSERT((e <<= 1) == 10);
+	}
+    // ------------------------------
     // Integer::operator >>= (int)
     // ------------------------------
-
+    void test_rightshift_equal(){
+		My::Integer<int> a = 123;
+		My::Integer<int> d = 10;
+		My::Integer<int> e = 10000;
+		CPPUNIT_ASSERT((a >>= 2) == 1);
+		CPPUNIT_ASSERT((d >>= 1) == 1);
+		CPPUNIT_ASSERT((e >>= 3) == 10);
+	}
+    // ------------------------------
+	
+    void mersenne20(){
+		My::Integer<int> a = 2;
+		My::Integer<int> b = a.pow(4423) - 1;
+		std::cout << "b : " << b << std::endl;
+	}
     // -----
     // suite
     // -----
@@ -860,6 +882,9 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_multip_equal);
 	CPPUNIT_TEST(test_divide_equal);
 	CPPUNIT_TEST(test_modulo_equal);
+	CPPUNIT_TEST(test_leftshift_equal);
+	CPPUNIT_TEST(test_rightshift_equal);
+	CPPUNIT_TEST(mersenne20);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
