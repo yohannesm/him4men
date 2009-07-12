@@ -44,6 +44,39 @@ struct TestInteger : CppUnit::TestFixture {
         catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);}}
 
+    void test_constructor_4 () {
+        try {
+            const My::Integer<int> x("aasdjj31asjdaskdlkk");
+            CPPUNIT_ASSERT(false);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(strcmp(e.what(), "My::Integer()"));}}
+
+    void test_constructor_5 () {
+        try {
+            const My::Integer<int> x("abskajdkaljwqe,mz,cmwjlkep[c");
+            CPPUNIT_ASSERT(false);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(strcmp(e.what(), "My::Integer()"));}}
+
+    void test_constructor_6 () {
+        try {
+            const My::Integer<int> x(21612273);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_constructor_7 () {
+        try {
+            const My::Integer<int> x = 6972198;}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_constructor_8 () {
+        try {
+            const My::Integer<int> x("172389172398712983712983719287391827398214681723");
+	    }
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
     // --------
     // test_abs
     // --------
@@ -53,6 +86,30 @@ struct TestInteger : CppUnit::TestFixture {
             const My::Integer<int> x = -98765;
             const My::Integer<int> y = x.abs();
             CPPUNIT_ASSERT(y == 98765);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_abs1 () {
+        try {
+            const My::Integer<int> x = -1234;
+            const My::Integer<int> y = x.abs();
+            CPPUNIT_ASSERT(y == 1234);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_abs2 () {
+        try {
+            const My::Integer<int> x = 9876;
+            const My::Integer<int> y = x.abs();
+            CPPUNIT_ASSERT(y == 9876);}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_abs3 () {
+        try {
+            const My::Integer<int> x = 0;
+            const My::Integer<int> y = x.abs();
+            CPPUNIT_ASSERT(y == 0);}
         catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);}}
 
@@ -138,6 +195,24 @@ struct TestInteger : CppUnit::TestFixture {
             std::ostringstream out;
             out << x;
             CPPUNIT_ASSERT(out.str() == "98765");}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_output1 () {
+        try {
+            const My::Integer<int> x = 12345;
+            std::ostringstream out;
+            out << x;
+            CPPUNIT_ASSERT(out.str() == "12345");}
+        catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);}}
+
+    void test_output2 () {
+        try {
+            const My::Integer<int> x = -36457;
+            std::ostringstream out;
+            out << x;
+            CPPUNIT_ASSERT(out.str() == "-36457");}
         catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);}}
 
@@ -250,9 +325,19 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
+    CPPUNIT_TEST(test_constructor_4);
+    CPPUNIT_TEST(test_constructor_5);
+    CPPUNIT_TEST(test_constructor_6);
+    CPPUNIT_TEST(test_constructor_7);
+    CPPUNIT_TEST(test_constructor_8);
     CPPUNIT_TEST(test_abs);
+    CPPUNIT_TEST(test_abs1);
+    CPPUNIT_TEST(test_abs2);
+    CPPUNIT_TEST(test_abs3);
     CPPUNIT_TEST(test_negation);
     CPPUNIT_TEST(test_output);
+    CPPUNIT_TEST(test_output1);
+    CPPUNIT_TEST(test_output2);
     CPPUNIT_TEST(test_pow);
     CPPUNIT_TEST_SUITE_END();};
 
