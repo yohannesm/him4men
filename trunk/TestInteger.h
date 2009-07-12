@@ -135,11 +135,24 @@ struct TestInteger : CppUnit::TestFixture {
         const T* p = My::divides_digits(a, a + 6, b, b + 3, x);
         CPPUNIT_ASSERT(p - x == 3);
         CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));}
+
+
     void test_divides_int () {
         My::Integer<int> a = 45;
         My::Integer<int> b = 5;
         My::Integer<int> c = 9;
+		My::Integer<int> r = (a / b);
         CPPUNIT_ASSERT((a / b) == c);
+        CPPUNIT_ASSERT(r == c);
+	}
+
+    void test_modulo_int () {
+        My::Integer<int> a = 123;
+        My::Integer<int> b = 10;
+        My::Integer<int> c = 3;
+		My::Integer<int> r = (a % b);
+        CPPUNIT_ASSERT((a % b) == c);
+        CPPUNIT_ASSERT(r == c);
 	}
     // -------------
     // test_equal_to
@@ -172,13 +185,137 @@ struct TestInteger : CppUnit::TestFixture {
         CPPUNIT_ASSERT(p - x == 3);
         CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));
 	}
+
+
     void test_minus_int () {
         My::Integer<int> a = 5;
         My::Integer<int> b = 3;
         My::Integer<int> c = 2;
-        std::cout << (a-b) << std::endl;
+		My::Integer<int> r = (a - b);
         CPPUNIT_ASSERT((a - b) == c);
 	}	
+	
+    void test_minus_int_1 () {
+        My::Integer<int> a = 5;
+        My::Integer<int> b = -2;
+        My::Integer<int> c = 7;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+    void test_minus_int_2 () {
+        My::Integer<int> a = -5;
+        My::Integer<int> b = 2;
+        My::Integer<int> c = -7;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+    void test_minus_int_3 () {
+        My::Integer<int> a = -5;
+        My::Integer<int> b = -2;
+        My::Integer<int> c = -3;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+
+    void test_minus_int_4 () {
+        My::Integer<int> a = -2;
+        My::Integer<int> b = 5;
+        My::Integer<int> c = -7;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+    void test_minus_int_5 () {
+        My::Integer<int> a = 2;
+        My::Integer<int> b = -5;
+        My::Integer<int> c = 7;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+
+    void test_minus_int_6 () {
+        My::Integer<int> a = -2;
+        My::Integer<int> b = -5;
+        My::Integer<int> c = 3;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+
+    void test_minus_int_7 () {
+        My::Integer<int> a = 2;
+        My::Integer<int> b = 5;
+        My::Integer<int> c = -3;
+		My::Integer<int> r = (a - b);
+        CPPUNIT_ASSERT((a - b) == c);
+	}	
+	
+
+    // -----------------
+    // test_plus_digits
+    // -----------------
+
+
+    void test_plus_int () {
+        My::Integer<int> a = 2;
+        My::Integer<int> b = 3;
+        My::Integer<int> c = 5;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+	
+    void test_plus_int_1 () {
+        My::Integer<int> a = 5;
+        My::Integer<int> b = -2;
+        My::Integer<int> c = 3;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
+    void test_plus_int_2 () {
+        My::Integer<int> a = -5;
+        My::Integer<int> b = 2;
+        My::Integer<int> c = -3;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
+    void test_plus_int_3 () {
+        My::Integer<int> a = -5;
+        My::Integer<int> b = -2;
+        My::Integer<int> c = -7;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
+    void test_plus_int_4 () {
+        My::Integer<int> a = -2;
+        My::Integer<int> b = 5;
+        My::Integer<int> c = 3;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
+    void test_plus_int_5 () {
+        My::Integer<int> a = 2;
+        My::Integer<int> b = -5;
+        My::Integer<int> c = -3;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
+
+    void test_plus_int_6 () {
+        My::Integer<int> a = -2;
+        My::Integer<int> b = -5;
+        My::Integer<int> c = -7;
+		My::Integer<int> r = (a + b);
+        CPPUNIT_ASSERT((a + b) == c);
+	}	
+
     // ----------------------
     // test_multiplies_digits
     // ----------------------
@@ -433,7 +570,22 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_pow_neg_3);
     CPPUNIT_TEST(test_pow2);
     CPPUNIT_TEST(test_divides_int);
+    //CPPUNIT_TEST(test_modulo_int);
+    CPPUNIT_TEST(test_plus_int);
+    CPPUNIT_TEST(test_plus_int_1);
+    CPPUNIT_TEST(test_plus_int_2);
+    CPPUNIT_TEST(test_plus_int_3);
+    CPPUNIT_TEST(test_plus_int_4);
+    CPPUNIT_TEST(test_plus_int_5);
+    CPPUNIT_TEST(test_plus_int_6);
     CPPUNIT_TEST(test_minus_int);
+    CPPUNIT_TEST(test_minus_int_1);
+    CPPUNIT_TEST(test_minus_int_2);
+    CPPUNIT_TEST(test_minus_int_3);
+    CPPUNIT_TEST(test_minus_int_4);
+    CPPUNIT_TEST(test_minus_int_5);
+    CPPUNIT_TEST(test_minus_int_6);
+    CPPUNIT_TEST(test_minus_int_7);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
