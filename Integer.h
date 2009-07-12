@@ -900,7 +900,8 @@ class Integer {
          */
         Integer& operator *= (const Integer& rhs) {
 			typename C::iterator copy_end;
-			C copy = this->container;
+			C copy;
+			copy.resize(this->container.size() + rhs.container.size() + 1);
 			this->sign = (this->sign == rhs.sign);
 			copy_end = multiplies_digits(this->container.begin(),
 										 this->container.end(),
