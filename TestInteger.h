@@ -24,6 +24,15 @@ struct TestInteger : CppUnit::TestFixture {
     // ----------------
     // test_constructor
     // ----------------
+    void test_constructor_0 () {
+        try {
+            const My::Integer<int> x("0");
+			assert(x == 0);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);
+		}
+	}
+
 
     void test_constructor_1 () {
         try {
@@ -251,19 +260,41 @@ struct TestInteger : CppUnit::TestFixture {
     // test_pow
     // --------
 
-    void test_pow () {
+    void test_pow1() {
         try {
             const My::Integer<int> x = 98765;
-            const int              e =  9867;
+            const int              e =     1;
             const My::Integer<int> y = x.pow(e);
             CPPUNIT_ASSERT(x == 98765);
-            CPPUNIT_ASSERT(e ==  9867);
-            CPPUNIT_ASSERT(y ==     0);
+            CPPUNIT_ASSERT(e ==     1);
 		} catch (std::invalid_argument& e) {
             CPPUNIT_ASSERT(false);
 		}
 	}
 
+    void test_pow0 () {
+        try {
+            const My::Integer<int> x = 98765;
+            const int              e =     0;
+            const My::Integer<int> y = x.pow(e);
+            CPPUNIT_ASSERT(x == 98765);
+            CPPUNIT_ASSERT(e ==     0);
+			CPPUNIT_ASSERT(y ==     1);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(false);
+		}
+	}
+
+    void test_pow00() {
+        try {
+            const My::Integer<int> x = 0;
+            const int              e = 0;
+            const My::Integer<int> y = x.pow(e);
+            CPPUNIT_ASSERT(false);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(true);
+		}
+	}
     // ----------------------
     // test_shift_left_digits
     // ----------------------
@@ -322,6 +353,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_multiplies_digits<char>);
     CPPUNIT_TEST(test_divides_digits<int>);
     CPPUNIT_TEST(test_divides_digits<char>);
+    CPPUNIT_TEST(test_constructor_0);
     CPPUNIT_TEST(test_constructor_1);
     CPPUNIT_TEST(test_constructor_2);
     CPPUNIT_TEST(test_constructor_3);
@@ -338,7 +370,9 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_output);
     CPPUNIT_TEST(test_output1);
     CPPUNIT_TEST(test_output2);
-    CPPUNIT_TEST(test_pow);
+    CPPUNIT_TEST(test_pow1);
+    CPPUNIT_TEST(test_pow0);
+    CPPUNIT_TEST(test_pow00);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
