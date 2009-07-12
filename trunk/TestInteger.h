@@ -295,6 +295,17 @@ struct TestInteger : CppUnit::TestFixture {
             CPPUNIT_ASSERT(true);
 		}
 	}
+
+    void test_pow_neg() {
+        try {
+            const My::Integer<int> x = 2;
+            const int              e = -1;
+            const My::Integer<int> y = x.pow(e);
+            CPPUNIT_ASSERT(false);
+		} catch (std::invalid_argument& e) {
+            CPPUNIT_ASSERT(true);
+		}
+	}
     // ----------------------
     // test_shift_left_digits
     // ----------------------
@@ -373,6 +384,7 @@ struct TestInteger : CppUnit::TestFixture {
     CPPUNIT_TEST(test_pow1);
     CPPUNIT_TEST(test_pow0);
     CPPUNIT_TEST(test_pow00);
+    CPPUNIT_TEST(test_pow_neg);
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
