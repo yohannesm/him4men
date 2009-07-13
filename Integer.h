@@ -251,7 +251,7 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 	result = minuend - subtrahend;
 	assert((result) < 10);
 	assert((result) >= 0);
-	
+	 
 	if (result == 0) {
 		++pending_zeroes;
 	} else {
@@ -314,7 +314,8 @@ OI minus_digits (II1 b1, II1 e1, II2 b2, II2 e2, OI x) {
 // multiplies_digits
 // -----------------
 
-/**
+/**multiply a sequence from b to e by T
+ * and outputting it to (OI) x
  * @note Assumes the iterators are iterating such that bX points at the LEAST
  * significant digit, and eX points just past the LEAST significant byte.
  */
@@ -510,6 +511,7 @@ class Integer {
 
         /**
          * Checking whether the lhs object is less than the rhs object
+	 * O(N) on average 
          */
         friend bool operator < (const Integer& lhs, const Integer& rhs) {
 			// Check signs - if they are different, handle this first
@@ -602,12 +604,9 @@ class Integer {
          * dividing 2 integer object an outputting a new Integer object for the result
          * rhs can't be equal to zero
          * @throws invalid_argument if (rhs == 0)
-         *FIXME: the exception thrown doesn't work somehow
+	 * exceptions will be thrown from /= if there are any
          */
         friend Integer operator / (Integer lhs, const Integer& rhs) {
-            /*if((rhs.container.size == 1) && (rhs.container[0] == 0)){
-            	throw std::invalid_argument("Integer::operator /");
-            	}*/
             return lhs /= rhs;
         }
 
@@ -674,6 +673,7 @@ class Integer {
         // -----
 		/**
          * checking the validity of the values inside the container
+	 * O(N) on average, costly so we just check it from the constructor
          */
         bool valid () const {
 	  	    typename C::const_iterator it = container.begin();
@@ -844,7 +844,6 @@ class Integer {
 				// the largest one first; so, if we need to switch their order,
 				// we reverse the sign.
 				// Ex: 9 - 18 = -(18 - 9)
-				// FIXME: Maybe use swap here instead
 				C copy = this->container;
 				typename C::iterator end;
 				if (this->abs() > rhs.abs()) {
@@ -877,6 +876,7 @@ class Integer {
         /**
          * -= operator for Integer object, 
          * the operation will return the modified object - value of rhs Integer
+	 * We will just send it to plus because plus handles negative Integer too
          */
         Integer& operator -= (const Integer& rhs) {
 			return ((*this) += -(rhs));
@@ -887,7 +887,7 @@ class Integer {
         // operator *=
         // -----------
 
-        /**
+        /*
          * *= operator for Integer object, 
          * the operation will return the modified object * value of rhs Integer
          */
@@ -952,7 +952,7 @@ class Integer {
         Integer& operator %= (const Integer& rhs) {
 			Integer copy = *this;
             if(rhs <= 0) {
-            	throw std::invalid_argument("Integer::operator /: div by 0");
+            	throw std::invalid_argument("Integer::operator /: mod by 0");
             }
 			if(*this==0){
 				return *this;

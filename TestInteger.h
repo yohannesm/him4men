@@ -137,6 +137,7 @@ struct TestInteger : CppUnit::TestFixture {
         CPPUNIT_ASSERT(std::equal(const_cast<const T*>(x), p, c));}
 
 
+
     void test_divides_int () {
         My::Integer<int> a = 45;
         My::Integer<int> b = 5;
@@ -879,6 +880,7 @@ struct TestInteger : CppUnit::TestFixture {
 	CPPUNIT_TEST(test_modulo_equal);
 	CPPUNIT_TEST(test_leftshift_equal);
 	CPPUNIT_TEST(test_rightshift_equal);
+
     CPPUNIT_TEST_SUITE_END();};
 
 #endif // TestInteger_h
