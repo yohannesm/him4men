@@ -251,7 +251,6 @@ subtract_next_column (II1 &b1, II1 &e1, II2 &b2, II2 &e2, OI &x,
 	result = minuend - subtrahend;
 	assert((result) < 10);
 	assert((result) >= 0);
-	 
 	if (result == 0) {
 		++pending_zeroes;
 	} else {
