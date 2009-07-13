@@ -55,15 +55,15 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 // -----------------
 
 /**
- * Write the given sequence of digits shifted left by the specified amount,
- * filling with zeroes.
+ * Write the given sequence of digits shifted left by the specified amount
+ * into the output, filling with zeroes.
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
- * @param n  the amount by which to shift.
+ * @param n  the amount by which to shift; a negative number here causes an
+ * invalid argument exception.
  * @param x  an iterator to the beginning of an output sequence (inclusive)
  * @return   an iterator to the end       of an output sequence (exclusive)
- * the sequences are of decimal digits
- * output the shift left of the input sequence into the output sequence
+ * @pre b != e
  * @note Assumes the iterators are iterating such that bX points at the LEAST
  * significant digit, and eX points just past the LEAST significant byte.
  * (s << n) => x
@@ -74,6 +74,7 @@ OI shift_left_digits (II b, II e, int n, OI x) {
 		throw std::invalid_argument("My::shift_left_digits: n < 0");
 	}
 
+	assert(b != e);
 	// Stream in the least significant zeroes produced by the shift
 	for (int i = 0; i < n; i++) {
 		*x = 0;
@@ -93,12 +94,16 @@ OI shift_left_digits (II b, II e, int n, OI x) {
 // ------------------
 
 /**
+ * Write the given sequence of digits shifted left by the specified amount
+ * into the output, filling with zeroes.
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
+ * @param n  the amount by which to shift; a negative number here causes an
+ * invalid argument exception.
  * @param x  an iterator to the beginning of an output sequence (inclusive)
  * @return   an iterator to the end       of an output sequence (exclusive)
- * the sequences are of decimal digits
- * output the shift right of the input sequence into the output sequence
+ * @pre b != e
+ * @note the sequences are of decimal digits
  * @note Assumes the iterators are iterating such that bX points at the LEAST
  * significant digit, and eX points just past the LEAST significant byte.
  * (s >> n) => x
@@ -106,11 +111,11 @@ OI shift_left_digits (II b, II e, int n, OI x) {
 template <typename II, typename OI>
 OI shift_right_digits (II b, II e, int n, OI x) {
 	if (n < 0) {
-		throw std::invalid_argument("Integer::operator <<=: n < 0");
+		throw std::invalid_argument("Integer::shift_right_digits: n < 0");
 	}
 
-	// First, allow the original iterator to proceed along, not copying anything
-	// to the destination until we get n elements into the container
+	assert(b != e);
+	// If the shift is larger than the number of digits, just output 0
 	if (std::distance(b, e) <= n) {
 		*x = 0;
 		++x;
