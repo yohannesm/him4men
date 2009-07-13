@@ -3,34 +3,34 @@ Title
 -----
 
 CS378: Project #4: Integer
-
+We are attempting the 30th mersenne prime
 --------------
 Google Project
 --------------
 
-<URL>
+http://code.google.com/p/him4men
 
 --
 Me
 --
 
-Name:
-EID:
-E-mail address:
+Name:Yohannes Himawan
+EID:ymh79	
+E-mail address:yohannes.marcell@gmail.com
 
 -------
 Partner
 -------
 
-Name:
-EID:
-E-mail address:
+Name:Ben Menchaca
+EID:bmench
+E-mail address:ben.menchaca@gmail.com
 
 -----------------------
 My Rating of My Partner
 -----------------------
 
-<rating>
+Excellent
 
 -------
 Ratings
