@@ -19,20 +19,16 @@
 namespace My {
 
 
-template <typename II>
-void print_digits(II b, II e)
-{
-	while (b != e) {
-		std::cout << *b;
-		++b;
-	}
-}
-
-
 /**
+ * Returns true of the digits reprented by input sequence 1 are less than the
+ * digits represented by input sequence 2.
+ * @param b1  an iterator to the beginning of input  sequence 1(inclusive)
+ * @param e1  an iterator to the end       of input  sequence 1(exclusive)
+ * @param b2  an iterator to the beginning of input  sequence 2(inclusive)
+ * @param e2  an iterator to the end       of input  sequence 2(exclusive)
+ * @return True iff the s1's digits are less than s2's digits.
  * @note Assumes the iterators are iterating such that bX points at the LEAST
  * significant digit, and eX points just past the MOST significant byte.
- * @FIXME: No tests
  */
 template <typename II1, typename II2>
 bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
@@ -54,35 +50,16 @@ bool less_than_digits(II1 b1, II1 e1, II2 b2, II2 e2)
 }
 
 
-/**
- * @note This function is AGNOSTIC to digit ordering; either LEAST or MOST may
- * be first.
- * @FIXME: No tests
- */
-template <typename II1, typename II2>
-bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
-{
-	unsigned int s1_len, s2_len;
-
-	s1_len = distance(b1, e1);
-	s2_len = distance(b2, e2);
-	if (s1_len != s2_len) return false;
-	while (b1 != e1) {
-		if (*b1 != *b2) return false;
-		++b1; ++b2;
-	}
-
-	assert(b2 == e2);
-	return true;
-}
-
 // -----------------
 // shift_left_digits
 // -----------------
 
 /**
+ * Write the given sequence of digits shifted left by the specified amount,
+ * filling with zeroes.
  * @param b  an iterator to the beginning of an input  sequence (inclusive)
  * @param e  an iterator to the end       of an input  sequence (exclusive)
+ * @param n  the amount by which to shift.
  * @param x  an iterator to the beginning of an output sequence (inclusive)
  * @return   an iterator to the end       of an output sequence (exclusive)
  * the sequences are of decimal digits
@@ -93,6 +70,10 @@ bool equal_digits(II1 b1, II1 e1, II2 b2, II2 e2)
  */
 template <typename II, typename OI>
 OI shift_left_digits (II b, II e, int n, OI x) {
+	if (n < 0) {
+		throw std::invalid_argument("My::shift_left_digits: n < 0");
+	}
+
 	// Stream in the least significant zeroes produced by the shift
 	for (int i = 0; i < n; i++) {
 		*x = 0;

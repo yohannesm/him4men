@@ -3,7 +3,7 @@ DOXYGEN ?= doxygen
 CC = g++
 EXTRA_CPPFLAGS += -g -ggdb -ansi -pedantic -Wall -O3
 TEST_LDFLAGS = -lcppunit -ldl
-#TEST_CPPFLAGS = -DTEST
+TEST_CPPFLAGS = -DTEST
 EXECUTABLE = main.app
 DOXYFILE = Doxyfile
 
